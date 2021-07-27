@@ -30,9 +30,9 @@ public class CodeGenerator {
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("Chen");
         gc.setOpen(false); //生成后是否打开资源管理器
-        gc.setFileOverride(false); //重新生成时文件是否覆盖
+        gc.setFileOverride(true); //重新生成时文件是否覆盖
         gc.setServiceName("%sService");	//去掉Service接口的首字母 I
-        gc.setIdType(IdType.ASSIGN_ID); //主键策略
+        gc.setIdType(IdType.AUTO); //主键策略（ASSIGN_ID 为雪花算法，AUTO 为自增
         gc.setDateType(DateType.ONLY_DATE);//定义生成的实体类中日期类型
         gc.setSwagger2(true);//开启Swagger2模式
 
@@ -40,7 +40,7 @@ public class CodeGenerator {
 
         // 3、数据源配置 （需要单独配置）
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/myhr?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8");
+        dsc.setUrl("jdbc:mysql://localhost:3306/myhr?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&useSSL=false");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("hrOnly");
         dsc.setPassword("123456");
