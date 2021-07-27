@@ -18,6 +18,9 @@
         <java.version>1.8</java.version>
         <swagger.version>2.9.2</swagger.version>
         <druid.version>1.2.6</druid.version>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <velocity.version>2.3</velocity.version>
+        <mybatis-plus-generator.version>3.4.1</mybatis-plus-generator.version>
     </properties>
 
     <dependencies>
@@ -31,17 +34,34 @@
         </dependency>
 
         <!-- 连接池配置（多数据源时使用） -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
+<!--            <version>${druid.version}</version>-->
+<!--        </dependency>-->
 
-        <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- mybatis-plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+        <!--  velocity 模板引擎, Mybatis Plus 代码生成器需要  -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>${velocity.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>${mybatis-plus-generator.version}</version>
         </dependency>
 
         <!-- swagger -->
@@ -89,6 +109,17 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <!-- 引入手动写的 xml 文件-->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
 
 </project>
