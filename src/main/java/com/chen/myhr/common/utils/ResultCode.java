@@ -11,12 +11,14 @@ public interface ResultCode {
     Integer SUCCESS = 200;
 
     /**
-     * 请求资源不存在
-     */
-    Integer ERROR = 404;
-
-    /**
      * 内部服务器错误
      */
-    Integer SYSTEM_ERROR = 500;
+    Integer ERROR = 500;
+
+    /**
+     * 请求资源不存在
+     */
+    Integer RESOURCES_ERROR = 404;
+
+
 }
