@@ -59,8 +59,30 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("hr"); // 生成代码所依据的 数据库表
-//        strategy.setInclude("edu_course", "edu_course_description", "edu_chapter", "edu_video");
+//        strategy.setInclude("hr"); // 生成代码所依据的 数据库表
+        strategy.setInclude("adjustsalary",
+                "appraise",
+                "department",
+                "employee",
+                "employeeec",
+                "employeeremove",
+                "employeetrain",
+                "empsalary",
+                "hr",
+                "hr_role",
+                "joblevel",
+                "mail_send_log",
+                "menu",
+                "menu_role",
+                "msgcontent",
+                "nation",
+                "oplog",
+                "politicsstatus",
+                "position",
+                "role",
+                "salary",
+                "sysmsg"
+        );
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 
