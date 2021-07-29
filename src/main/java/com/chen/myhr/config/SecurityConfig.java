@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -80,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .permitAll() // 登出相关的接口无需登录就可访问
                 .and()
-                .csrf().disable(); // 测试使用
+                .csrf().disable();
 
         http.addFilterAt(authenticationJsonFilter(), UsernamePasswordAuthenticationFilter.class);
     }
@@ -142,5 +143,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
         return filter;
 
+    }
+
+    /**
+     * 解决 swagger2 被拦截问题
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // allow Swagger URL to be accessed without authentication
+        web.ignoring().antMatchers(
+                "/swagger-ui.html",
+                // swagger api json
+                "/v2/api-docs",
+                // 用来获取支持的动作
+                "/swagger-resources/configuration/ui",
+                // 用来获取api-docs的URI
+                "/swagger-resources",
+                // 安全选项
+                "/swagger-resources/configuration/security",
+                "/swagger-resources/**",
+                //补充路径，近期在搭建swagger接口文档时，通过浏览器控制台发现该/webjars路径下的文件被拦截，故加上此过滤条件即可。(2020-10-23)
+                "/webjars/**"
+
+
+        );
     }
 }
