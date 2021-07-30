@@ -38,6 +38,15 @@
         </collection>
     </resultMap>
 
+    <!-- 定义类型，返回每个菜单及其对应的角色（加入 role 类型） -->
+    <resultMap id="menusWithRole" type="com.chen.myhr.bean.Menu" extends="menuResultMap">
+        <collection property="roles" ofType="com.chen.myhr.bean.Role">
+            <id column="rid" property="id"/>
+            <result column="rName" property="name"/>
+            <result column="rNameZh" property="nameZh"/>
+        </collection>
+    </resultMap>
+
     <!-- 以当前登录用户 id 查询菜单（因为 mr.id 不同会导致重复，所以需要去重 -->
     <select id="getMenusByHrId" resultMap="menusFinalMap">
         select distinct m1.*,
@@ -78,4 +87,15 @@
         and mr.mid=m2.id
         and m2.enabled=true
     order by m1.id-->
+
+    <select id="getMenusWithRole" resultMap="menusWithRole">
+        select m.*,
+               r.`id` as rid,
+               r.`name` as rName,
+               r.`nameZh` as rNameZh
+        from menu m,menu_role mr,role r
+        where m.`id`=mr.`mid`
+          and mr.`rid`=r.`id`
+        order by m.`id`
+    </select>
 </mapper>

@@ -17,4 +17,10 @@ public interface MenuService extends IService<Menu> {
      */
     List<Menu> getMenusByHrId();
 
+    /**
+     * 获取每个菜单及其所对应的角色
+     * @return List<Role>
+     */
+    List<Menu> getMenusWithRole();
+
 }

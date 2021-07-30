@@ -17,4 +17,10 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @return List<Menu>
      */
     List<Menu> getMenusByHrId(Integer hrId);
+
+    /**
+     * 获取每个菜单及其所对应的角色
+     * @return List<Role>
+     */
+    List<Menu> getMenusWithRole();
 }

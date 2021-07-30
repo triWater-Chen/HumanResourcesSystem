@@ -1,6 +1,5 @@
 package com.chen.myhr.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chen.myhr.bean.Hr;
 import com.chen.myhr.bean.Menu;
 import com.chen.myhr.mapper.MenuMapper;
@@ -24,5 +23,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         Hr hr = (Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer id = hr.getId();
         return baseMapper.getMenusByHrId(id);
+    }
+
+    @Override
+    public List<Menu> getMenusWithRole() {
+        return baseMapper.getMenusWithRole();
     }
 }
