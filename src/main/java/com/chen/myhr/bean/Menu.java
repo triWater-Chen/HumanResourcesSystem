@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,7 +37,7 @@ public class Menu implements Serializable {
 
     @TableField("iconCls")
     private String iconcls;
-
+    
     @TableField("parentId")
     private Integer parentid;
 
