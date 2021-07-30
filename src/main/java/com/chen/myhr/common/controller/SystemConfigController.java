@@ -16,7 +16,7 @@ import java.util.List;
  * @create 2021-07-29
  */
 @RestController
-@RequestMapping("/system/config")
+@RequestMapping("/system")
 public class SystemConfigController {
 
     @Resource
