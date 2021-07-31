@@ -82,8 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 }) // 对自定义的过滤器注入，对所有请求进行过滤
                 .and()
                 .formLogin() // 表单登录
-                // 自动跳转的登录页面地址
-                .loginPage("/login")
+                // 自动跳转的登录页面地址 .loginPage("/login")
                 .permitAll() // 登录相关的接口无需登录就可访问
                 .and()
                 .logout()
@@ -188,7 +187,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // allow Swagger URL to be accessed without authentication
         web.ignoring().antMatchers(
-                "/login",
                 "/swagger-ui.html",
                 // swagger api json
                 "/v2/api-docs",
