@@ -3,7 +3,7 @@
 <mapper namespace="com.chen.myhr.mapper.MenuMapper">
 
     <!-- 将 Meta 添加到菜单类中 -->
-    <!-- 一对多 -->
+    <!-- 多对一，多个 meta 对应一个菜单 -->
     <resultMap id="menuResultMap" type="com.chen.myhr.bean.Menu" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="url" property="url" jdbcType="VARCHAR" />
@@ -20,7 +20,7 @@
     </resultMap>
 
     <!-- 定义 返回菜单 类型（将 children 添加到菜单类中） -->
-    <!-- 多对一 -->
+    <!-- 多对多，组合 -->
     <resultMap id="menusFinalMap" type="com.chen.myhr.bean.Menu" extends="menuResultMap">
         <collection property="children" ofType="com.chen.myhr.bean.Menu">
             <id column="idSon" property="id" jdbcType="INTEGER" />
@@ -39,11 +39,12 @@
     </resultMap>
 
     <!-- 定义类型，返回每个菜单及其对应的角色（加入 role 类型） -->
+    <!-- 一对多，一个角色对应多个菜单 -->
     <resultMap id="menusWithRole" type="com.chen.myhr.bean.Menu" extends="menuResultMap">
         <collection property="roles" ofType="com.chen.myhr.bean.Role">
             <id column="rid" property="id"/>
             <result column="rName" property="name"/>
-            <result column="rNameZh" property="nameZh"/>
+            <result column="rNameZh" property="namezh"/>
         </collection>
     </resultMap>
 
