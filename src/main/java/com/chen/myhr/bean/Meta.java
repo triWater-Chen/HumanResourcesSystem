@@ -1,6 +1,7 @@
 package com.chen.myhr.bean;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,5 +19,6 @@ public class Meta implements Serializable {
 
     private Boolean keepAlive;
 
+    @ApiModelProperty(value = "用于在前端判断是否需要权限访问（本项目未使用到，因为是在后端判断权限）")
     private Boolean requireAuth;
 }
