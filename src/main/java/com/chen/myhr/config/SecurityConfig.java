@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -37,6 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
     HrService hrService;
+
+    @Resource
+    CustomFilter customFilter;
+
+    @Resource
+    CustomUrlDecision customUrlDecision;
 
     /**
      * 使用该方法对密码进行加密
@@ -61,7 +69,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest().authenticated() // 对所有的请求，登录之后就可访问
+//                .anyRequest().authenticated() // 对所有的请求，登录之后就可访问
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+
+                        o.setAccessDecisionManager(customUrlDecision);
+                        o.setSecurityMetadataSource(customFilter);
+                        return o;
+                    }
+                }) // 对自定义的过滤器注入，对所有请求进行过滤
                 .and()
                 .formLogin() // 表单登录
                 // 自动跳转的登录页面地址
