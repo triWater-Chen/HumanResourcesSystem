@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -98,7 +99,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .permitAll() // 登出相关的接口无需登录就可访问
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                // 没有认证时，在此处理结果，返回 json 数据，不需要重定向到 /login
+                // 解决前端没登录时路径乱输入会跳转到 localhost:7000/login 页面，报错跨域（因为路径不对时前端直接访问该地址，没经过 node.js 代理）
+                .exceptionHandling()
+                .authenticationEntryPoint(new AuthenticationEntryPoint() {
+                    @Override
+                    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+                        response.setContentType("application/json; charset=UTF-8");
+                        response.setStatus(401);
+                        PrintWriter out = response.getWriter();
+                        Result result = Result.error().message("访问失败");
+                        if (e instanceof InsufficientAuthenticationException) {
+                            result.message("非法请求");
+                        }
+                        out.write(new ObjectMapper().writeValueAsString(result));
+                        out.flush();
+                        out.close();
+                    }
+                });
 
         http.addFilterAt(authenticationJsonFilter(), UsernamePasswordAuthenticationFilter.class);
     }
