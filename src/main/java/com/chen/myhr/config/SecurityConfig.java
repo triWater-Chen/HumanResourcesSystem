@@ -169,6 +169,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // allow Swagger URL to be accessed without authentication
         web.ignoring().antMatchers(
+                "/login",
                 "/swagger-ui.html",
                 // swagger api json
                 "/v2/api-docs",
