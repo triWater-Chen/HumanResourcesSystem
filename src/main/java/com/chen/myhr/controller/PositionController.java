@@ -6,6 +6,7 @@ import com.chen.myhr.common.utils.Result;
 import com.chen.myhr.service.PositionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javafx.geometry.Pos;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,11 +35,8 @@ public class PositionController {
 
     @ApiOperation("添加职位")
     @PostMapping("/add")
-    public Result addPositions(String name) {
+    public Result addPositions(@RequestBody Position position) {
 
-        Position position = new Position();
-        position.setName(name);
-        position.setEnabled(true);
         if (positionService.save(position)) {
             return Result.done().message("添加成功");
         }
@@ -67,12 +65,11 @@ public class PositionController {
 
     @ApiOperation("批量删除职位")
     @PostMapping("/removeBatch")
-    public Result removeBatchPositions(@RequestBody Map ids) {
+    public Result removeBatchPositions(@RequestBody List<Integer> ids) {
 
-        System.out.println(ids);
-//        if (positionService.removeByIds(ids)) {
-//            return Result.done().message("删除成功");
-//        }
+        if (positionService.removeByIds(ids)) {
+            return Result.done().message("删除成功");
+        }
         return Result.error().message("删除失败");
     }
 }
