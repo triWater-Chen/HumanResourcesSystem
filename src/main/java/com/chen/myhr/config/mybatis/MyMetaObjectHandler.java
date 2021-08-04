@@ -1,4 +1,4 @@
-package com.chen.myhr.common.utils;
+package com.chen.myhr.config.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
