@@ -1,8 +1,6 @@
 package com.chen.myhr.controller;
 
-
 import com.chen.myhr.bean.Joblevel;
-import com.chen.myhr.bean.Position;
 import com.chen.myhr.common.utils.Result;
 import com.chen.myhr.service.JoblevelService;
 import io.swagger.annotations.Api;
