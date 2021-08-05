@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chen.myhr.bean.MenuRole;
 import com.chen.myhr.bean.Role;
 import com.chen.myhr.bean.vo.request.RolePageReq;
+import com.chen.myhr.bean.vo.request.RoleUpdateReq;
 import com.chen.myhr.bean.vo.result.MenuWithChildren;
 import com.chen.myhr.common.utils.Result;
 import com.chen.myhr.service.MenuRoleService;
@@ -13,11 +14,7 @@ import com.chen.myhr.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -76,6 +73,28 @@ public class RoleController {
         }
 
         return Result.done().data("list", menuIdByRole);
+    }
+
+    @ApiOperation("添加/修改角色")
+    @PostMapping("/update")
+    public Result updateRole(@RequestBody RoleUpdateReq req) {
+
+        // 对角色的菜单权限进行添加/修改
+        boolean result =  menuRoleService.updateMenuByRole(req);
+
+        // 对角色的基本信息进行添加/修改
+        Role role = new Role();
+        role.setId(req.getId());
+        role.setName("ROLE_" + req.getName());
+        role.setNamezh(req.getNamezh());
+        role.setEnabled(req.getEnabled());
+        boolean update = roleService.saveOrUpdate(role);
+
+        if (result && update) {
+            return Result.done().message("更新成功");
+        } else {
+            return Result.error().message("更新失败");
+        }
     }
 }
 
