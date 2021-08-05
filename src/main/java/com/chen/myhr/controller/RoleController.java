@@ -1,22 +1,26 @@
 package com.chen.myhr.controller;
 
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chen.myhr.bean.MenuRole;
 import com.chen.myhr.bean.Role;
 import com.chen.myhr.bean.vo.request.RolePageReq;
 import com.chen.myhr.bean.vo.result.MenuWithChildren;
 import com.chen.myhr.common.utils.Result;
+import com.chen.myhr.service.MenuRoleService;
 import com.chen.myhr.service.MenuService;
 import com.chen.myhr.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +37,9 @@ public class RoleController {
 
     @Resource
     MenuService menuService;
+
+    @Resource
+    MenuRoleService menuRoleService;
 
     @ApiOperation("按条件分页查询角色")
     @GetMapping("/list")
@@ -51,7 +58,24 @@ public class RoleController {
     public Result getMenuTree() {
 
         List<MenuWithChildren> menuTree = menuService.getMenusWithChildren();
-        return Result.done().data("menu", menuTree);
+        return Result.done().data("menus", menuTree);
+    }
+
+    @ApiOperation("根据角色 id 查询对应的菜单 id")
+    @GetMapping("/menuByRole/{id}")
+    public Result getMenuByRole(@PathVariable int id) {
+
+        QueryWrapper<MenuRole> menuRoleQueryWrapper = new QueryWrapper<>();
+        menuRoleQueryWrapper.eq("rid", id);
+        List<MenuRole> menuRoleList = menuRoleService.list(menuRoleQueryWrapper);
+
+        // 将查询出的 menu id 放入列表中
+        List<Integer> menuIdByRole = new ArrayList<>();
+        for (MenuRole menuRole : menuRoleList) {
+            menuIdByRole.add(menuRole.getMid());
+        }
+
+        return Result.done().data("list", menuIdByRole);
     }
 }
 

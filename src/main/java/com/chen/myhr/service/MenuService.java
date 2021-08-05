@@ -26,8 +26,7 @@ public interface MenuService extends IService<Menu> {
 
     /**
      * 获取每个菜单及其字菜单，返回树形菜单
-     * @return List<Menu>
+     * @return List<MenuWithChildren>
      */
     List<MenuWithChildren> getMenusWithChildren();
-
 }
