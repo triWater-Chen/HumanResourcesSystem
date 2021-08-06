@@ -17,6 +17,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +41,8 @@ public class RoleController {
 
     @ApiOperation("按条件分页查询角色")
     @GetMapping("/list")
-    public Result getAllRoles(RolePageReq req) {
+    public Result getAllRoles(@Valid RolePageReq req) {
 
-        // TODO: 对 PageReq 字段进行非空校验
         Page<Role> roles = roleService.listByCondition(req);
         if (ObjectUtils.isEmpty(roles.getRecords())) {
             return Result.error().message("未查询到相关角色");
@@ -77,7 +77,7 @@ public class RoleController {
 
     @ApiOperation("添加/修改角色")
     @PostMapping("/update")
-    public Result updateRole(@RequestBody RoleUpdateReq req) {
+    public Result updateRole(@Valid @RequestBody RoleUpdateReq req) {
 
         // 对角色的菜单权限进行添加/修改
         boolean result =  menuRoleService.updateMenuByRole(req);
@@ -88,6 +88,7 @@ public class RoleController {
         role.setName("ROLE_" + req.getName());
         role.setNamezh(req.getNamezh());
         role.setEnabled(req.getEnabled());
+        // 根据判断 role 是否有主键来进行添加或修改
         boolean update = roleService.saveOrUpdate(role);
 
         if (result && update) {

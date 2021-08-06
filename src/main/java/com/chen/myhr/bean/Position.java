@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * @author Chen
  * @since 2021-07-28
@@ -27,6 +29,7 @@ public class Position implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @NotEmpty(message = "【职位名称】不能为空")
     @ApiModelProperty(value = "职位")
     private String name;
 

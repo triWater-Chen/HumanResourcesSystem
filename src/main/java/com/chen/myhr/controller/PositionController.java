@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class PositionController {
 
     @ApiOperation("添加职位")
     @PostMapping("/add")
-    public Result addPositions(@RequestBody Position position) {
+    public Result addPositions(@Valid @RequestBody Position position) {
 
         if (positionService.save(position)) {
             return Result.done().message("添加成功");
@@ -45,7 +46,7 @@ public class PositionController {
 
     @ApiOperation("修改职位")
     @PostMapping("/update")
-    public Result updatePositions(@RequestBody Position position) {
+    public Result updatePositions(@Valid @RequestBody Position position) {
 
         if (positionService.updateById(position)) {
             return Result.done().message("修改成功");

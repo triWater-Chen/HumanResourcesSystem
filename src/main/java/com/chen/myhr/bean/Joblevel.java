@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * @author Chen
  * @since 2021-07-28
@@ -27,9 +29,11 @@ public class Joblevel implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @NotEmpty(message = "【职称名称】不能为空")
     @ApiModelProperty(value = "职称名称")
     private String name;
 
+    @NotEmpty(message = "【职称等级】不能为空")
     @TableField("titleLevel")
     private String titleLevel;
 

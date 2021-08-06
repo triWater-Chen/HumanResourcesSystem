@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class JobLevelController {
 
     @ApiOperation("添加职称")
     @PostMapping("/add")
-    public Result addJobLevels(@RequestBody Joblevel joblevel) {
+    public Result addJobLevels(@Valid @RequestBody Joblevel joblevel) {
 
         if (joblevelService.save(joblevel)) {
             return Result.done().message("添加成功");
@@ -42,7 +43,7 @@ public class JobLevelController {
 
     @ApiOperation("修改职称")
     @PostMapping("/update")
-    public Result updateJobLevels(@RequestBody Joblevel joblevel) {
+    public Result updateJobLevels(@Valid @RequestBody Joblevel joblevel) {
 
         if (joblevelService.updateById(joblevel)) {
             return Result.done().message("修改成功");

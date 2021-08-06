@@ -3,6 +3,7 @@ package com.chen.myhr.common.exception;
 import com.chen.myhr.common.utils.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * 统一处理格式不符合数据库要求的异常
+     * 统一处理：格式不符合数据库要求的异常
      * @return Result
      */
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
@@ -39,5 +40,16 @@ public class GlobalExceptionHandler {
         } else {
             return Result.error().message(e.getMessage());
         }
+    }
+
+    /**
+     * 统一处理：校验异常（针对 BindException 类的异常）
+     * @return Result
+     */
+    @ExceptionHandler(value = BindException.class)
+    public Result validExceptionHandler(BindException e) {
+
+        LOG.warn("参数校验失败：{}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return Result.error().message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 }

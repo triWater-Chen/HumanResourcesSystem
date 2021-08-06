@@ -3,6 +3,7 @@ package com.chen.myhr.bean.vo.request;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -16,8 +17,10 @@ public class RoleUpdateReq {
 
     private Integer id;
 
+    @NotEmpty(message = "【英文名称】不能为空")
     private String name;
 
+    @NotEmpty(message = "【中文名称】不能为空")
     private String namezh;
 
     private Boolean enabled;
