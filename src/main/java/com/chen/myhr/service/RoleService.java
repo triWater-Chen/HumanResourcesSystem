@@ -22,9 +22,10 @@ public interface RoleService extends IService<Role> {
     Page<Role> listByCondition(RolePageReq req);
 
     /**
-     * 修改角色基本信息及其菜单权限
+     * 添加/修改角色基本信息及其菜单权限
      * @param req RoleUpdateReq
      * @return boolean
      */
-    boolean updateRoleWithMenu(RoleUpdateReq req);
+    boolean saveOrUpdateRoleWithMenu(RoleUpdateReq req);
+
 }

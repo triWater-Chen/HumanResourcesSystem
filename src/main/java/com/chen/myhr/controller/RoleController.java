@@ -86,11 +86,11 @@ public class RoleController {
         }
     }
 
-    @ApiOperation("修改角色")
-    @PostMapping("/update")
+    @ApiOperation("添加/修改角色")
+    @PostMapping("/saveOrUpdate")
     public Result updateRole(@Valid @RequestBody RoleUpdateReq req) {
 
-        if (roleService.updateRoleWithMenu(req)) {
+        if (roleService.saveOrUpdateRoleWithMenu(req)) {
             return Result.done().message("更新成功");
         } else {
             return Result.error().message("更新失败");

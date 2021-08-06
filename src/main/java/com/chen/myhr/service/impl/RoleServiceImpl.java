@@ -51,23 +51,26 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean updateRoleWithMenu(RoleUpdateReq req) {
+    public boolean saveOrUpdateRoleWithMenu(RoleUpdateReq req) {
 
-        // 对角色的菜单权限进行修改
-        boolean result =  menuRoleService.updateMenuByRole(req);
-
-        // 对角色的基本信息进行修改
+        // 添加/修改角色基本信息
         Role role = new Role();
         BeanUtils.copyProperties(req, role, "menuIds");
-        String prefix = "ROLE_";
-        if (req.getName().startsWith(prefix)) {
-            role.setName(req.getName());
-        } else {
-            role.setName("ROLE_" + req.getName());
-        }
-        // 根据判断 role 是否有主键来进行修改
-        int update = baseMapper.updateById(role);
+        role.setName("ROLE_" + req.getName());
 
-        return result && update > 0;
+        // 通过判断 role 是否存在 id 来进行添加或修改
+        int update = 0;
+        if (ObjectUtils.isEmpty(req.getId())) {
+            update = baseMapper.insert(role);
+        } else {
+            // 根据判断 role 是否有主键来进行修改
+            update = baseMapper.updateById(role);
+        }
+
+        // 对角色的菜单权限进行添加或修改
+        // 若是添加，则必须先添加角色，才能获取 id，修改菜单权限，所以该步骤放最后
+        boolean result = menuRoleService.saveOrUpdateMenuByRole(req);
+
+        return update > 0 && result;
     }
 }

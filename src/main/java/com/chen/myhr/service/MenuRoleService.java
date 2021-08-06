@@ -11,9 +11,9 @@ import com.chen.myhr.bean.vo.request.RoleUpdateReq;
 public interface MenuRoleService extends IService<MenuRole> {
 
     /**
-     * 修改角色的菜单权限
+     * 添加或修改角色的菜单权限
      * @param req RoleUpdateReq
      * @return boolean
      */
-    boolean updateMenuByRole(RoleUpdateReq req);
+    boolean saveOrUpdateMenuByRole(RoleUpdateReq req);
 }
