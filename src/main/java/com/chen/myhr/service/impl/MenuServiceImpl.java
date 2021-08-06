@@ -22,6 +22,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<Menu> getMenusByHrId() {
+        // 使用自己写的 xml 中的方法
 
         Hr hr = (Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer id = hr.getId();
@@ -30,6 +31,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<Menu> getMenusWithRole() {
+        // 使用自己写的 xml 中的方法
         return baseMapper.getMenusWithRole();
     }
 
