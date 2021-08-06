@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 /**
  * @author Chen
@@ -29,10 +30,10 @@ public class Role implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @NotEmpty(message = "【角色英文名称】不能为空")
+    @Pattern(regexp = "^\\w{1,15}$", message = "【角色英文名称】格式不正确")
     private String name;
 
-    @NotEmpty(message = "【角色中文名称】不能为空")
+    @NotEmpty(message = "【中文名称】不能为空")
     @ApiModelProperty(value = "角色名称")
     @TableField("nameZh")
     private String namezh;

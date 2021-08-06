@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class RoleUpdateReq {
 
     private Integer id;
 
-    @NotEmpty(message = "【英文名称】不能为空")
+    @Pattern(regexp = "^\\w{1,15}$", message = "【英文名称】格式不正确")
     private String name;
 
     @NotEmpty(message = "【中文名称】不能为空")
