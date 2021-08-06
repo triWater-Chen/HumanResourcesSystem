@@ -75,6 +75,17 @@ public class RoleController {
         return Result.done().data("list", menuIdByRole);
     }
 
+    @ApiOperation("修改角色状态")
+    @PostMapping("/changeStatus")
+    public Result changeStatus(@RequestBody Role role) {
+
+        if (roleService.updateById(role)) {
+            return Result.done();
+        } else {
+            return Result.error();
+        }
+    }
+
     @ApiOperation("添加/修改角色")
     @PostMapping("/update")
     public Result updateRole(@Valid @RequestBody RoleUpdateReq req) {
