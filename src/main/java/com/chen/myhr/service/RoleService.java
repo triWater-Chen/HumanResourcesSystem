@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chen.myhr.bean.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chen.myhr.bean.vo.request.RolePageReq;
+import com.chen.myhr.bean.vo.request.RoleUpdateReq;
 
 import java.util.List;
 
@@ -19,4 +20,11 @@ public interface RoleService extends IService<Role> {
      * @return List<Role>
      */
     Page<Role> listByCondition(RolePageReq req);
+
+    /**
+     * 修改角色基本信息及其菜单权限
+     * @param req RoleUpdateReq
+     * @return boolean
+     */
+    boolean updateRoleWithMenu(RoleUpdateReq req);
 }

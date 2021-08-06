@@ -21,37 +21,28 @@ public class MenuRoleServiceImpl extends ServiceImpl<MenuRoleMapper, MenuRole> i
     @Override
     public boolean updateMenuByRole(RoleUpdateReq req) {
 
-        if (ObjectUtils.isEmpty(req.getId())) {
-            // 进行添加
+        // 先根据角色 id，将原 id 绑定的菜单清空
+        baseMapper.delete(new QueryWrapper<MenuRole>().eq("rid", req.getId()));
 
-            System.out.println(req);
-            return true;
-        } else {
-            // 进行修改角色菜单权限
+        // 插入所修改的菜单
+        int sum = 0;
+        MenuRole menuRole = new MenuRole();
+        menuRole.setRid(req.getId());
+        for (Integer mid : req.getMenuIds()) {
+            // mybatisPlus 只能逐条插入
 
-            // 先根据角色 id，将原 id 绑定的菜单清空
-            baseMapper.delete(new QueryWrapper<MenuRole>().eq("rid", req.getId()));
-
-            // 插入所修改的菜单
-            int sum = 0;
-            MenuRole menuRole = new MenuRole();
-            menuRole.setRid(req.getId());
-            for (Integer mid : req.getMenuIds()) {
-                // mybatisPlus 只能逐条插入
-
-                menuRole.setMid(mid);
-                int insert = baseMapper.insert(menuRole);
-                sum += insert;
-            }
-
-            return sum == req.getMenuIds().size();
-            // 若要批量插入， 在 xml 中：
-            // <insert id="insertBatch">
-            //    insert into menu_role (mid, rid) values
-            //    <foreach collection="menuIds" item="mid" separator=",">
-            //        (#{mid}, #{rid})
-            //    </foreach>
-            //</insert>
+            menuRole.setMid(mid);
+            int insert = baseMapper.insert(menuRole);
+            sum += insert;
         }
+
+        return sum == req.getMenuIds().size();
+        // 若要批量插入， 在 xml 中：
+        // <insert id="insertBatch">
+        //    insert into menu_role (mid, rid) values
+        //    <foreach collection="menuIds" item="mid" separator=",">
+        //        (#{mid}, #{rid})
+        //    </foreach>
+        //</insert>
     }
 }

@@ -77,7 +77,7 @@ public class RoleController {
 
     @ApiOperation("修改角色状态")
     @PostMapping("/changeStatus")
-    public Result changeStatus(@RequestBody Role role) {
+    public Result changeStatus(@Valid @RequestBody Role role) {
 
         if (roleService.updateById(role)) {
             return Result.done();
@@ -86,23 +86,11 @@ public class RoleController {
         }
     }
 
-    @ApiOperation("添加/修改角色")
+    @ApiOperation("修改角色")
     @PostMapping("/update")
     public Result updateRole(@Valid @RequestBody RoleUpdateReq req) {
 
-        // 对角色的菜单权限进行添加/修改
-        boolean result =  menuRoleService.updateMenuByRole(req);
-
-        // 对角色的基本信息进行添加/修改
-        Role role = new Role();
-        role.setId(req.getId());
-        role.setName("ROLE_" + req.getName());
-        role.setNamezh(req.getNamezh());
-        role.setEnabled(req.getEnabled());
-        // 根据判断 role 是否有主键来进行添加或修改
-        boolean update = roleService.saveOrUpdate(role);
-
-        if (result && update) {
+        if (roleService.updateRoleWithMenu(req)) {
             return Result.done().message("更新成功");
         } else {
             return Result.error().message("更新失败");
