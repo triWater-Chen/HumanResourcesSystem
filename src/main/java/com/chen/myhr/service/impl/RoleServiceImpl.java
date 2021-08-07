@@ -40,14 +40,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
 
         // 动态 sql 查询
-        if (StringUtils.hasLength((req.getName()))) {
+        if (StringUtils.hasLength(req.getName())) {
             roleQueryWrapper.like("name", "ROLE_" + req.getName());
         }
-        if (StringUtils.hasLength((req.getNamezh()))) {
+        if (StringUtils.hasLength(req.getNamezh())) {
             roleQueryWrapper.like("nameZh", req.getNamezh());
         }
         if (!ObjectUtils.isEmpty(req.getEnabled())) {
             roleQueryWrapper.eq("enabled", req.getEnabled());
+        }
+        if (StringUtils.hasLength(req.getBeginTime())) {
+            roleQueryWrapper.ge("createDate", req.getBeginTime() + " 00:00:00");
+        }
+        if (StringUtils.hasLength(req.getEndTime())) {
+            roleQueryWrapper.le("createDate", req.getEndTime() + " 23:59:59");
         }
         roleQueryWrapper.orderByAsc("id");
 

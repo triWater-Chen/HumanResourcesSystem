@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -19,11 +20,14 @@ public class RolePageReq extends PageReq{
 
     private Integer id;
 
+    @Pattern(regexp = "^\\w{0,15}$", message = "【角色英文名称】格式不正确")
     private String name;
 
     private String namezh;
 
-    private Date createdate;
-
     private Boolean enabled;
+
+    private String beginTime;
+
+    private String endTime;
 }
