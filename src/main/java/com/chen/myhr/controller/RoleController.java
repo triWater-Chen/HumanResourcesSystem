@@ -41,7 +41,7 @@ public class RoleController {
 
     @ApiOperation("按条件分页查询角色")
     @GetMapping("/list")
-    public Result getAllRoles(@Valid RolePageReq req) {
+    public Result getRoles(@Valid RolePageReq req) {
 
         Page<Role> roles = roleService.listByCondition(req);
         if (ObjectUtils.isEmpty(roles.getRecords())) {
