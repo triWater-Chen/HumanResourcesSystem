@@ -2,12 +2,15 @@ package com.chen.myhr.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chen.myhr.bean.Department;
+import com.chen.myhr.bean.vo.request.DepartmentReq;
 import com.chen.myhr.bean.vo.result.DepartmentWithChildren;
 import com.chen.myhr.common.utils.CopyUtil;
 import com.chen.myhr.mapper.DepartmentMapper;
 import com.chen.myhr.service.DepartmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -32,6 +35,29 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         }
 
         return departmentList;
+    }
+
+    @Override
+    public List<Department> listByCondition(DepartmentReq req) {
+
+        QueryWrapper<Department> departmentQueryWrapper = new QueryWrapper<>();
+
+        // 动态 sql 查询
+        if (StringUtils.hasLength(req.getName())) {
+            departmentQueryWrapper.like("name", req.getName());
+        }
+        if (StringUtils.hasLength(req.getBeginTime())) {
+            departmentQueryWrapper.ge("createDate", req.getBeginTime() + " 00:00:00");
+        }
+        if (!ObjectUtils.isEmpty(req.getEnabled())) {
+            departmentQueryWrapper.eq("enabled", req.getEnabled());
+        }
+        if (StringUtils.hasLength(req.getEndTime())) {
+            departmentQueryWrapper.le("createDate", req.getEndTime() + " 23:59:59");
+        }
+        departmentQueryWrapper.orderByAsc("id");
+
+        return baseMapper.selectList(departmentQueryWrapper);
     }
 
     /**
