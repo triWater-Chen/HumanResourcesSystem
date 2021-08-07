@@ -28,4 +28,10 @@ public interface RoleService extends IService<Role> {
      */
     boolean saveOrUpdateRoleWithMenu(RoleUpdateReq req);
 
+    /**
+     * 批量删除角色及其菜单权限
+     * @param ids 角色 ids
+     * @return boolean
+     */
+    boolean removeBatchRoleWithMenu(List<Integer> ids);
 }

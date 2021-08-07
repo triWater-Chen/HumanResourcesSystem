@@ -96,5 +96,16 @@ public class RoleController {
             return Result.error().message("更新失败");
         }
     }
+
+    @ApiOperation("批量删除角色（将会删除 menu_role 和 hr_role 相关数据")
+    @PostMapping("/removeBatch")
+    public Result removeBatchRole(@RequestBody List<Integer> ids) {
+
+        if (roleService.removeBatchRoleWithMenu(ids)) {
+            return Result.done().message("删除成功");
+        } else {
+            return Result.error().message("删除失败");
+        }
+    }
 }
 
