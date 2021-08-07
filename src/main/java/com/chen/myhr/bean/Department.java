@@ -1,9 +1,13 @@
 package com.chen.myhr.bean;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,15 +31,19 @@ public class Department implements Serializable {
     private String name;
 
     @TableField("parentId")
-    private Integer parentid;
+    private Integer parentId;
 
+    @ApiModelProperty(value = "便于快速搜索部门")
     @TableField("depPath")
-    private String deppath;
+    private String depPath;
 
     private Boolean enabled;
 
     @TableField("isParent")
-    private Boolean isparent;
+    private Boolean isParent;
 
+    @TableField(fill = FieldFill.INSERT, value = "createDate")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    private Date createdate;
 
 }
