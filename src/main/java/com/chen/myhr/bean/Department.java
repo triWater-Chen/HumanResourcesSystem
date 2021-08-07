@@ -42,6 +42,8 @@ public class Department implements Serializable {
     @TableField("isParent")
     private Boolean isParent;
 
+    private Integer sort;
+
     @TableField(fill = FieldFill.INSERT, value = "createDate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date createdate;

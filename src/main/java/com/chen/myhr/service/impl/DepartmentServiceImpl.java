@@ -42,7 +42,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         // 查出下一级部门
         QueryWrapper<Department> departmentQueryWrapper = new QueryWrapper<>();
         departmentQueryWrapper.eq("parentId", departmentList.getId())
-                .orderByAsc("id");
+                .orderByAsc("sort");
         List<Department> departments = baseMapper.selectList(departmentQueryWrapper);
 
         // 对得到的部门进行封装
