@@ -8,7 +8,9 @@ import com.chen.myhr.common.utils.CopyUtil;
 import com.chen.myhr.mapper.DepartmentMapper;
 import com.chen.myhr.service.DepartmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 

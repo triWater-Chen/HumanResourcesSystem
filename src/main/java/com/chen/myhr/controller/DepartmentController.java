@@ -8,12 +8,10 @@ import com.chen.myhr.service.DepartmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -46,6 +44,16 @@ public class DepartmentController {
             return Result.error().code(200).message("未查询到相关角色");
         }
         return Result.done().data("list", departments).message("查询成功");
+    }
+
+    @ApiOperation("添加部门")
+    @PostMapping("/add")
+    public Result addDepartment(@Valid @RequestBody Department req) {
+
+        if (departmentService.save(req)) {
+            return Result.done().message("添加成功");
+        }
+        return Result.error().message("添加失败");
     }
 }
 
