@@ -13,6 +13,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Chen
  * @since 2021-07-28
@@ -27,21 +30,20 @@ public class Department implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @NotEmpty(message = "【部门名称】不能为空")
     @ApiModelProperty(value = "部门名称")
     private String name;
 
+    @NotNull(message = "【上级部门】不能为空")
     @TableField("parentId")
     private Integer parentId;
-
-    @ApiModelProperty(value = "便于快速搜索部门")
-    @TableField("depPath")
-    private String depPath;
 
     private Boolean enabled;
 
     @TableField("isParent")
     private Boolean isParent;
 
+    @NotNull(message = "【部门排序】不能为空")
     private Integer sort;
 
     @TableField(fill = FieldFill.INSERT, value = "createDate")
