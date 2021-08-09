@@ -25,6 +25,13 @@ import java.util.List;
 public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Department> implements DepartmentService {
 
     @Override
+    public boolean checkDepartmentName(String name) {
+
+        Integer count = baseMapper.selectCount(new QueryWrapper<Department>().eq("name", name));
+        return count > 0;
+    }
+
+    @Override
     public List<DepartmentWithChildren> getDepartmentsTree() {
 
         // 先得到一级部门（因为要返回 List，所以此处要查 List<> 格式）

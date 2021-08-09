@@ -9,4 +9,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface JoblevelService extends IService<Joblevel> {
 
+    /**
+     * 判断职称名称是否重复
+     * @param name 职称名称
+     * @return boolean
+     */
+    boolean checkJobLevelName(String name);
 }

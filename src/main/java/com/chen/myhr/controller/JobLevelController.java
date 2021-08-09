@@ -35,6 +35,10 @@ public class JobLevelController {
     @PostMapping("/add")
     public Result addJobLevels(@Valid @RequestBody Joblevel joblevel) {
 
+        if (joblevelService.checkJobLevelName(joblevel.getName())) {
+            return Result.error().message("添加失败，职称名称【" + joblevel.getName() + "】已存在");
+        }
+
         if (joblevelService.save(joblevel)) {
             return Result.done().message("添加成功");
         }
@@ -44,6 +48,8 @@ public class JobLevelController {
     @ApiOperation("修改职称")
     @PostMapping("/update")
     public Result updateJobLevels(@Valid @RequestBody Joblevel joblevel) {
+
+        // 此处使用数据库来判断字段重复（因为状态修改也是使用该接口）
 
         if (joblevelService.updateById(joblevel)) {
             return Result.done().message("修改成功");

@@ -42,7 +42,7 @@ public class DepartmentController {
 
         List<Department> departments = departmentService.listByCondition(req);
         if (ObjectUtils.isEmpty(departments)) {
-            return Result.error().code(200).message("未查询到相关角色");
+            return Result.done().code(500).message("未查询到相关角色");
         }
         return Result.done().data("list", departments).message("查询成功");
     }
@@ -50,6 +50,10 @@ public class DepartmentController {
     @ApiOperation("添加部门")
     @PostMapping("/add")
     public Result addDepartment(@Valid @RequestBody Department req) {
+
+        if (departmentService.checkDepartmentName(req.getName())) {
+            return Result.error().message("添加失败，部门名称【" + req.getName() + "】已存在");
+        }
 
         if (departmentService.save(req)) {
             return Result.done().message("添加成功");
@@ -61,18 +65,20 @@ public class DepartmentController {
     @PostMapping("/update")
     public Result updateDepartment(@Valid @RequestBody DepartmentWithChildren req) {
 
+        // 此处使用数据库来判断字段重复（因为状态修改也是使用该接口）
+
         if (req.getParentId().equals(req.getId())) {
-            return Result.error().message("操作失败，上级部门不能是自己");
+            return Result.error().message("修改失败，上级部门不能是自己");
         }
 
         String result = departmentService.updateDepartment(req);
         if (CommonConstants.STATUS.equals(result)) {
-            return Result.error().message("操作失败，该部门中包含未停用的子部门");
+            return Result.error().message("修改失败，该部门中包含未停用的子部门");
         }
         if (CommonConstants.SQL_SUCCESS.equals(result)) {
-            return Result.done().message("更新成功");
+            return Result.done().message("修改成功");
         }
-        return Result.error().message("更新失败");
+        return Result.error().message("修改失败");
     }
 }
 

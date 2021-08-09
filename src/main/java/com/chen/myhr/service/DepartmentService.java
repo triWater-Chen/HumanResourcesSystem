@@ -14,6 +14,13 @@ import java.util.List;
 public interface DepartmentService extends IService<Department> {
 
     /**
+     * 判断部门名称是否重复
+     * @param name 部门名称
+     * @return boolean
+     */
+    boolean checkDepartmentName(String name);
+
+    /**
      * 获取所有部门，返回部门树
      * @return List<DepartmentWithChildren>
      */

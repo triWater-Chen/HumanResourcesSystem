@@ -38,6 +38,10 @@ public class PositionController {
     @PostMapping("/add")
     public Result addPositions(@Valid @RequestBody Position position) {
 
+        if (positionService.checkPositionName(position.getName())) {
+            return Result.error().message("添加失败，职位名称【" + position.getName() + "】已存在");
+        }
+
         if (positionService.save(position)) {
             return Result.done().message("添加成功");
         }
@@ -47,6 +51,8 @@ public class PositionController {
     @ApiOperation("修改职位")
     @PostMapping("/update")
     public Result updatePositions(@Valid @RequestBody Position position) {
+
+        // 此处使用数据库来判断字段重复（因为状态修改也是使用该接口）
 
         if (positionService.updateById(position)) {
             return Result.done().message("修改成功");

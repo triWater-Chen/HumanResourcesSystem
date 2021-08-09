@@ -15,6 +15,13 @@ import java.util.List;
 public interface RoleService extends IService<Role> {
 
     /**
+     * 检测角色英文名称是否重复
+     * @param name 角色英文名
+     * @return boolean
+     */
+    boolean checkRoleName(String name);
+
+    /**
      * 按条件分页查询角色
      * @param req RolePageReq
      * @return List<Role>
