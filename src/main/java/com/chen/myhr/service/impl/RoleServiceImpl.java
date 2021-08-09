@@ -71,8 +71,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         role.setName("ROLE_" + req.getName());
 
         // 通过判断 role 是否存在 id 来进行添加或修改
-        int update = 0;
+        int update;
         if (ObjectUtils.isEmpty(req.getId())) {
+            // 进行添加
             update = baseMapper.insert(role);
         } else {
             // 根据判断 role 是否有主键来进行修改
