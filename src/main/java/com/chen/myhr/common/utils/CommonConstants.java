@@ -13,7 +13,12 @@ public class CommonConstants {
     public static final String SQL_SUCCESS = "OK";
 
     /**
-     * 标识：sql 中出现不符合查询条件的情况
+     * 标识：sql 中出现不符合查询条件的情况_A
      */
-    public static final String STATUS = "OUT";
+    public static final String STATUS_A = "OUTa";
+
+    /**
+     * 标识：sql 中出现不符合查询条件的情况_B
+     */
+    public static final String STATUS_B = "OUTb";
 }
