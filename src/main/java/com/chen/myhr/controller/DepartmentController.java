@@ -3,6 +3,7 @@ package com.chen.myhr.controller;
 import com.chen.myhr.bean.Department;
 import com.chen.myhr.bean.vo.request.DepartmentReq;
 import com.chen.myhr.bean.vo.result.DepartmentWithChildren;
+import com.chen.myhr.common.utils.CommonConstants;
 import com.chen.myhr.common.utils.Result;
 import com.chen.myhr.service.DepartmentService;
 import io.swagger.annotations.Api;
@@ -54,6 +55,24 @@ public class DepartmentController {
             return Result.done().message("添加成功");
         }
         return Result.error().message("添加失败");
+    }
+
+    @ApiOperation("修改部门")
+    @PostMapping("/update")
+    public Result updateDepartment(@Valid @RequestBody DepartmentWithChildren req) {
+
+        if (req.getParentId().equals(req.getId())) {
+            return Result.error().message("操作失败，上级部门不能是自己");
+        }
+
+        String result = departmentService.updateDepartment(req);
+        if (CommonConstants.STATUS.equals(result)) {
+            return Result.error().message("操作失败，该部门中包含未停用的子部门");
+        }
+        if (CommonConstants.SQL_SUCCESS.equals(result)) {
+            return Result.done().message("更新成功");
+        }
+        return Result.error().message("更新失败");
     }
 }
 

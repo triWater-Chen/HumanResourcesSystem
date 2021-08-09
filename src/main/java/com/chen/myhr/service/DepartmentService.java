@@ -25,4 +25,11 @@ public interface DepartmentService extends IService<Department> {
      * @return List<DepartmentWithChildren>
      */
     List<Department> listByCondition(DepartmentReq req);
+
+    /**
+     * 修改部门
+     * @param req 部门参数
+     * @return int
+     */
+    String updateDepartment(DepartmentWithChildren req);
 }

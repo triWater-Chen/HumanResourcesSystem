@@ -4,12 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chen.myhr.bean.Department;
 import com.chen.myhr.bean.vo.request.DepartmentReq;
 import com.chen.myhr.bean.vo.result.DepartmentWithChildren;
+import com.chen.myhr.common.utils.CommonConstants;
 import com.chen.myhr.common.utils.CopyUtil;
 import com.chen.myhr.mapper.DepartmentMapper;
 import com.chen.myhr.service.DepartmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -26,8 +27,9 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     @Override
     public List<DepartmentWithChildren> getDepartmentsTree() {
 
-        // 先得到一级部门
-        List<Department> departments = baseMapper.selectList(new QueryWrapper<Department>().eq("parentId", -1));
+        // 先得到一级部门（因为要返回 List，所以此处要查 List<> 格式）
+        List<Department> departments =
+                baseMapper.selectList(new QueryWrapper<Department>().eq("parentId", -1));
         // 对得到的部门进行封装
         List<DepartmentWithChildren> departmentList = CopyUtil.copyList(departments, DepartmentWithChildren.class);
 
@@ -60,6 +62,38 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         departmentQueryWrapper.orderByAsc("id");
 
         return baseMapper.selectList(departmentQueryWrapper);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public String updateDepartment(DepartmentWithChildren req) {
+
+        // 修改状态，实现：若节点禁用，其子节点需全是禁用状态；若节点可用，其父节点必可用
+        if (req.getEnabled()) {
+            // 若节点可用，其父节点必可用
+
+            // 查询其父节点，并将父节点设置为可用
+            Department departmentPapa = baseMapper.selectById(req.getParentId());
+            departmentPapa.setEnabled(true);
+            baseMapper.updateById(departmentPapa);
+        } else {
+            // 若节点禁用，其子节点需全是禁用状态（只需判断下一级节点全为禁用即可）
+
+            // 判断是否有子部门
+            if (!CollectionUtils.isEmpty(req.getChildren())) {
+                // 遍历循环下一级子部门
+                for(DepartmentWithChildren department : req.getChildren()) {
+
+                    // 若子部门中有可用的部门，直接返回
+                    if (department.getEnabled()) {
+                        return CommonConstants.STATUS;
+                    }
+                }
+            }
+        }
+
+        baseMapper.updateById(req);
+        return CommonConstants.SQL_SUCCESS;
     }
 
     /**
