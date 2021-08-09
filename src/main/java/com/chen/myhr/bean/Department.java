@@ -40,9 +40,6 @@ public class Department implements Serializable {
 
     private Boolean enabled;
 
-    @TableField("isParent")
-    private Boolean isParent;
-
     @NotNull(message = "【部门排序】不能为空")
     private Integer sort;
 
