@@ -45,7 +45,7 @@ public class RoleController {
 
         Page<Role> roles = roleService.listByCondition(req);
         if (ObjectUtils.isEmpty(roles.getRecords())) {
-            return Result.error().code(200).message("未查询到相关角色");
+            return Result.done().code(500).message("未查询到相关角色");
         }
         return Result.done().data("list", roles).message("查询成功");
     }
