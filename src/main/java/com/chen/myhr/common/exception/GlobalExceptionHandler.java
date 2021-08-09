@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
         String foreign = "foreign";
 
         if (e.getMessage().contains(duplicate)) {
-            return Result.error().message("添加失败，不允许重名");
+            return Result.error().message("操作失败，不允许重名");
         } else if (e.getMessage().contains(foreign)) {
             return Result.error().message("该数据与其他数据相关联，无法删除");
         } else {
