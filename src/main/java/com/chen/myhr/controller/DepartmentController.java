@@ -63,7 +63,7 @@ public class DepartmentController {
 
     @ApiOperation("修改部门")
     @PostMapping("/update")
-    public Result updateDepartment(@Valid @RequestBody DepartmentWithChildren req) {
+    public Result updateDepartment(@Valid @RequestBody Department req) {
 
         // 此处使用数据库来判断字段重复（因为状态修改也是使用该接口）
 
@@ -72,13 +72,32 @@ public class DepartmentController {
         }
 
         String result = departmentService.updateDepartment(req);
-        if (CommonConstants.STATUS.equals(result)) {
+        if (CommonConstants.STATUS_A.equals(result)) {
             return Result.error().message("修改失败，该部门中包含未停用的子部门");
         }
         if (CommonConstants.SQL_SUCCESS.equals(result)) {
             return Result.done().message("修改成功");
         }
         return Result.error().message("修改失败");
+    }
+
+    @ApiOperation("删除部门")
+    @PostMapping("/remove/{id}")
+    public Result removeDepartment(@PathVariable Integer id) {
+        // @RequestParam() 中 required 默认 =true，此时前端不传对应值会报错
+
+        String result = departmentService.removeDepartment(id);
+        if (CommonConstants.STATUS_A.equals(result)) {
+            return Result.error().message("删除失败，该部门下仍包含子部门");
+        }
+        if (CommonConstants.STATUS_B.equals(result)) {
+            return Result.error().message("删除失败，该部门下仍包含员工");
+        }
+
+        if (CommonConstants.SQL_SUCCESS.equals(result)) {
+            return Result.done().message("删除成功");
+        }
+        return Result.error().message("删除失败");
     }
 }
 

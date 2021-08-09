@@ -2,6 +2,7 @@ package com.chen.myhr.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chen.myhr.bean.Department;
+import com.chen.myhr.bean.Employee;
 import com.chen.myhr.bean.vo.request.DepartmentReq;
 import com.chen.myhr.bean.vo.result.DepartmentWithChildren;
 import com.chen.myhr.common.utils.CommonConstants;
@@ -9,12 +10,14 @@ import com.chen.myhr.common.utils.CopyUtil;
 import com.chen.myhr.mapper.DepartmentMapper;
 import com.chen.myhr.service.DepartmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chen.myhr.service.EmployeeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,6 +26,9 @@ import java.util.List;
  */
 @Service
 public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Department> implements DepartmentService {
+
+    @Resource
+    EmployeeService employeeService;
 
     @Override
     public boolean checkDepartmentName(String name) {
@@ -73,33 +79,57 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String updateDepartment(DepartmentWithChildren req) {
+    public String updateDepartment(Department req) {
 
         // 修改状态，实现：若节点禁用，其子节点需全是禁用状态；若节点可用，其父节点必可用
         if (req.getEnabled()) {
-            // 若节点可用，其父节点必可用
+            // 若节点可用，其父节点必可用（只设置上一级的父节点）
 
-            // 查询其父节点，并将父节点设置为可用
+            // 查询其父节点，并将父节点设置为可用（只设置上一级的父节点）
             Department departmentPapa = baseMapper.selectById(req.getParentId());
             departmentPapa.setEnabled(true);
             baseMapper.updateById(departmentPapa);
         } else {
             // 若节点禁用，其子节点需全是禁用状态（只需判断下一级节点全为禁用即可）
 
-            // 判断是否有子部门
-            if (!CollectionUtils.isEmpty(req.getChildren())) {
-                // 遍历循环下一级子部门
-                for(DepartmentWithChildren department : req.getChildren()) {
+            // 查询子部门
+            List<Department> departmentChild
+                    = baseMapper.selectList(new QueryWrapper<Department>().eq("parentId", req.getId()));
+            // 若存在子部门，将下一级子部门进行遍历
+            if (!CollectionUtils.isEmpty(departmentChild)) {
+                for (Department department : departmentChild) {
 
                     // 若子部门中有可用的部门，直接返回
                     if (department.getEnabled()) {
-                        return CommonConstants.STATUS;
+                        return CommonConstants.STATUS_A;
                     }
                 }
             }
         }
 
         baseMapper.updateById(req);
+        return CommonConstants.SQL_SUCCESS;
+    }
+
+    @Override
+    public String removeDepartment(Integer id) {
+
+        // 若存在下级部门，删除失败（与判断节点禁用相同，只需判断是否存在下一级节点）
+        Integer countDep =
+                baseMapper.selectCount(new QueryWrapper<Department>().eq("parentId", id));
+        if (countDep > 0) {
+            return CommonConstants.STATUS_A;
+        }
+
+        // 查询员工表，若该部门中仍有成员，删除失败
+        Integer countEmp =
+                employeeService.getBaseMapper()
+                        .selectCount(new QueryWrapper<Employee>().eq("departmentId", id));
+        if (countEmp > 0) {
+            return CommonConstants.STATUS_B;
+        }
+
+        baseMapper.deleteById(id);
         return CommonConstants.SQL_SUCCESS;
     }
 

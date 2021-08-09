@@ -29,14 +29,21 @@ public interface DepartmentService extends IService<Department> {
     /**
      * 按条件查询部门
      * @param req 所查询的部门
-     * @return List<DepartmentWithChildren>
+     * @return List<Department>
      */
     List<Department> listByCondition(DepartmentReq req);
 
     /**
      * 修改部门
      * @param req 部门参数
-     * @return int
+     * @return String
      */
-    String updateDepartment(DepartmentWithChildren req);
+    String updateDepartment(Department req);
+
+    /**
+     * 删除部门
+     * @param id 部门 id
+     * @return String
+     */
+    String removeDepartment(Integer id);
 }
