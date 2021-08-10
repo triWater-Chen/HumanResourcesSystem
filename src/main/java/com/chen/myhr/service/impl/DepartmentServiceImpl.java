@@ -107,8 +107,11 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
             }
         }
 
-        baseMapper.updateById(req);
-        return CommonConstants.SQL_SUCCESS;
+        if (baseMapper.updateById(req) > 0) {
+            return CommonConstants.SQL_SUCCESS;
+        } else {
+            return CommonConstants.SQL_ERROR;
+        }
     }
 
     @Override
@@ -129,8 +132,11 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
             return CommonConstants.STATUS_B;
         }
 
-        baseMapper.deleteById(id);
-        return CommonConstants.SQL_SUCCESS;
+        if (baseMapper.deleteById(id) > 0) {
+            return CommonConstants.SQL_SUCCESS;
+        } else {
+            return CommonConstants.SQL_ERROR;
+        }
     }
 
     /**

@@ -90,9 +90,7 @@ public class RoleController {
     @PostMapping("/saveOrUpdate")
     public Result updateRole(@Valid @RequestBody RoleUpdateReq req) {
 
-        if (roleService.checkRoleName(req.getName())) {
-            return Result.error().message("操作失败，角色英文名称【ROLE_" + req.getName() + "】已存在");
-        }
+        // 此处使用数据库来判断字段重复（因为查询名称没排除被修改该行数据）
 
         if (roleService.saveOrUpdateRoleWithMenu(req)) {
             return Result.done().message("更新成功");

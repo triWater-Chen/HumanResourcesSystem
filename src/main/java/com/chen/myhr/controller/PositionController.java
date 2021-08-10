@@ -52,7 +52,7 @@ public class PositionController {
     @PostMapping("/update")
     public Result updatePositions(@Valid @RequestBody Position position) {
 
-        // 此处使用数据库来判断字段重复（因为状态修改也是使用该接口）
+        // 此处使用数据库来判断字段重复（因为查询名称没排除被修改该行数据）
 
         if (positionService.updateById(position)) {
             return Result.done().message("修改成功");

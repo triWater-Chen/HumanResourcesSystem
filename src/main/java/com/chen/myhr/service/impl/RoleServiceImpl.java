@@ -35,14 +35,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     HrRoleService hrRoleService;
 
     @Override
-    public boolean checkRoleName(String name) {
-
-        Integer count =
-                baseMapper.selectCount(new QueryWrapper<Role>().eq("name", "ROLE_" + name));
-        return count > 0;
-    }
-
-    @Override
     public Page<Role> listByCondition(RolePageReq req) {
 
         QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();

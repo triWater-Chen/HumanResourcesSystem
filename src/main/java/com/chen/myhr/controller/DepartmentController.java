@@ -65,7 +65,7 @@ public class DepartmentController {
     @PostMapping("/update")
     public Result updateDepartment(@Valid @RequestBody Department req) {
 
-        // 此处使用数据库来判断字段重复（因为状态修改也是使用该接口）
+        // 此处使用数据库来判断字段重复（因为查询名称没排除被修改该行数据）
 
         if (req.getParentId().equals(req.getId())) {
             return Result.error().message("修改失败，上级部门不能是自己");
