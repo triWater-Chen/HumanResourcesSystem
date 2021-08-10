@@ -44,5 +44,6 @@ public class Role implements Serializable {
 
     private Boolean enabled;
 
+    private String remark;
 
 }

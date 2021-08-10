@@ -26,5 +26,7 @@ public class RoleUpdateReq {
 
     private Boolean enabled;
 
+    private String remark;
+
     private List<Integer> menuIds;
 }
