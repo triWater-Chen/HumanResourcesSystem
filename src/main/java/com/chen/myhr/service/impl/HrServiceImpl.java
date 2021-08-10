@@ -49,7 +49,6 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
             List<HrRole> hrRoles = hrRoleService.list(hrRoleQueryWrapper);
 
             // 2. 遍历上步得出的数据，通过获取其中的 rid，查出与 role 表中 id 相应数据
-            QueryWrapper<Role> roleQueryWrapper = new QueryWrapper<>();
             List<Integer> idList = new ArrayList<>();
             for (HrRole hrRole : hrRoles) {
                 idList.add(hrRole.getRid());

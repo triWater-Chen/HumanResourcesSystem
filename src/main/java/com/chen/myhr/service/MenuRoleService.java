@@ -2,6 +2,7 @@ package com.chen.myhr.service;
 
 import com.chen.myhr.bean.MenuRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chen.myhr.bean.vo.request.RoleUpdateReq;
 
 /**
  * @author Chen
@@ -9,4 +10,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MenuRoleService extends IService<MenuRole> {
 
+    /**
+     * 添加或修改角色的菜单权限
+     * @param req RoleUpdateReq
+     * @return boolean
+     */
+    boolean saveOrUpdateMenuByRole(RoleUpdateReq req);
 }

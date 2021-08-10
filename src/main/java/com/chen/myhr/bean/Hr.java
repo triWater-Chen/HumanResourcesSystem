@@ -1,13 +1,17 @@
 package com.chen.myhr.bean;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -52,18 +56,26 @@ public class Hr implements Serializable, UserDetails {
     @ApiModelProperty(value = "密码")
     private String password;
 
-    private String userface;
+    @TableField("userFace")
+    private String userFace;
 
     private String remark;
 
-    @ApiModelProperty(value = "所具备的角色")
+    @TableField(fill = FieldFill.INSERT, value = "createDate")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    private Date createdate;
+
+    @ApiModelProperty(value = "存放用户所具备的角色")
     @TableField(exist = false)
     private List<Role> roles;
 
-
+    @ApiModelProperty(value = "查询并返回用户所具备的角色给 security")
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 返回用户所具备的角色
+            // 使用 @JsonIgnore，实现：
+            // 在 json 序列化时将 pojo 中的一些属性忽略掉，标记在属性或者方法上，返回的 json 数据即不包含该属性
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
         // 遍历添加该用户所具备的所有角色
@@ -74,18 +86,21 @@ public class Hr implements Serializable, UserDetails {
         return authorities;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         // 账户是否没过期
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         // 账户是否没锁定
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         // 密码是否没过期
