@@ -42,7 +42,7 @@ public class DepartmentController {
 
         List<Department> departments = departmentService.listByCondition(req);
         if (ObjectUtils.isEmpty(departments)) {
-            return Result.done().code(500).message("未查询到相关角色");
+            return Result.done().code(500).message("未查询到相关部门");
         }
         return Result.done().data("list", departments).message("查询成功");
     }
