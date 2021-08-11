@@ -14,11 +14,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 /**
  * @author Chen
@@ -36,9 +41,11 @@ public class Hr implements Serializable, UserDetails {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @NotEmpty(message = "【昵称】不能为空")
     @ApiModelProperty(value = "姓名")
     private String name;
 
+    @Pattern(regexp = "^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$", message = "【手机号码】格式不正确")
     @ApiModelProperty(value = "手机号码")
     private String phone;
 
@@ -48,8 +55,14 @@ public class Hr implements Serializable, UserDetails {
     @ApiModelProperty(value = "联系地址")
     private String address;
 
+    /**
+     * 因为在本类中已经重载了 isEnabled
+     * 如果再让 @Data 去实现 getter，会出现两个相同的，导致错误
+     */
+    @Getter(value = AccessLevel.NONE)
     private Boolean enabled;
 
+    @NotEmpty(message = "【用户名】不能为空")
     @ApiModelProperty(value = "用户名")
     private String username;
 
