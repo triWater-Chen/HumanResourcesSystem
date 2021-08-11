@@ -65,6 +65,25 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
     }
 
     @Override
+    public boolean checkHrUsernameAndPhone(Hr hr) {
+
+        QueryWrapper<Hr> hrQueryWrapper = new QueryWrapper<>();
+        // 排除修改时，对自身原本数据的查询（如果添加，传进来的是 null，不影响查询）
+        hrQueryWrapper.ne("id", hr.getId());
+
+        // 判断用户名和电话都不重名
+        hrQueryWrapper.and(i ->
+                i.eq("username", hr.getUsername()).or().eq("phone", hr.getPhone()));
+        /*
+          .eq("username", hr.getUsername()).or().eq("phone", hr.getPhone()) 是错误的
+          因为配合上面的 .ne，实际效果会是：(.ne.and.eq).or(.eq)，需要的是 .ne.and(.eq.or.eq)
+         */
+
+        Integer count = baseMapper.selectCount(hrQueryWrapper);
+        return count > 0;
+    }
+
+    @Override
     public List<Hr> listHrByCondition(HrReq req) {
 
         QueryWrapper<Hr> hrQueryWrapper = new QueryWrapper<>();

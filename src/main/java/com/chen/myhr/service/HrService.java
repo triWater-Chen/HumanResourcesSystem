@@ -15,10 +15,16 @@ public interface HrService extends IService<Hr>, UserDetailsService {
     // 继承 UserDetailsService，重载 spring security 中对用户信息的查询功能
 
     /**
+     * 检查用户名和手机号是否重复
+     * @param hr 用户参数
+     * @return boolean
+     */
+    boolean checkHrUsernameAndPhone(Hr hr);
+
+    /**
      * 按条件查询用户，但排除查询 password 字段
      * @param req 用户参数
      * @return List<Hr>
      */
     List<Hr> listHrByCondition(HrReq req);
-
 }
