@@ -164,6 +164,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     result.message("账户被禁用，请联系管理员");
                 } else if (e instanceof BadCredentialsException) {
                     result.message("用户名或密码错误，请重新输入");
+                } else if (e instanceof InternalAuthenticationServiceException) {
+                    result.message("该用户下无角色，无法登录");
                 }
                 out.write(new ObjectMapper().writeValueAsString(result));
                 out.flush();
