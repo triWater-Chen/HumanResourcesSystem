@@ -8,6 +8,11 @@ package com.chen.myhr.common.utils;
 public class CommonConstants {
 
     /**
+     * 默认头像
+     */
+    public static final String AVATAR = "https://img2.baidu.com/it/u=1863729799,2399392231&fm=26&fmt=auto&gp=0.jpg";
+
+    /**
      * sql 成功
      */
     public static final String SQL_SUCCESS = "OK";
