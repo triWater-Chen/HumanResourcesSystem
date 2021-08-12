@@ -27,4 +27,11 @@ public interface HrService extends IService<Hr>, UserDetailsService {
      * @return List<Hr>
      */
     List<Hr> listHrByCondition(HrReq req);
+
+    /**
+     * 根据 id 删除用户及其与角色的关联
+     * @param id 用户 id
+     * @return boolean
+     */
+    boolean removeHr(Integer id);
 }

@@ -10,9 +10,11 @@ import com.chen.myhr.service.HrRoleService;
 import com.chen.myhr.service.HrService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chen.myhr.service.RoleService;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -50,6 +52,10 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
             QueryWrapper<HrRole> hrRoleQueryWrapper = new QueryWrapper<>();
             hrRoleQueryWrapper.eq("hrid", hr.getId());
             List<HrRole> hrRoles = hrRoleService.list(hrRoleQueryWrapper);
+            // 若该用户下不具备角色，则不允许登录
+            if (ObjectUtils.isEmpty(hrRoles)) {
+                throw new InternalAuthenticationServiceException("该用户下无角色");
+            }
 
             // 2. 遍历上步得出的数据，通过获取其中的 rid，查出与 role 表中 id 相应数据
             List<Integer> idList = new ArrayList<>();
@@ -111,5 +117,17 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
         hrQueryWrapper.select(Hr.class, i -> !"password".equals(i.getProperty()));
 
         return baseMapper.selectList(hrQueryWrapper);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean removeHr(Integer id) {
+
+        // 先删除该用户与角色的关联
+        hrRoleService.remove(new QueryWrapper<HrRole>().eq("hrid", id));
+
+        // 最后删除该用户
+        int delete = baseMapper.deleteById(id);
+        return delete > 0;
     }
 }
