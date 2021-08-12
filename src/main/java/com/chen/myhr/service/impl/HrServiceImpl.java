@@ -38,13 +38,13 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // 按用户名查询用户
+        // 按用户名或手机号查询用户
         QueryWrapper<Hr> hrQueryWrapper = new QueryWrapper<>();
-        hrQueryWrapper.eq("username", username);
+        hrQueryWrapper.eq("username", username).or().eq("phone", username);
         Hr hr = baseMapper.selectOne(hrQueryWrapper);
 
         if (hr == null) {
-            throw new UsernameNotFoundException("用户名不存在!");
+            throw new UsernameNotFoundException("该账号不存在!");
         }
 
         // ----- 若登录成功，则设置该用户所具备的角色 -----
@@ -74,8 +74,10 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
     public boolean checkHrUsernameAndPhone(Hr hr) {
 
         QueryWrapper<Hr> hrQueryWrapper = new QueryWrapper<>();
-        // 排除修改时，对自身原本数据的查询（如果添加，传进来的是 null，不影响查询）
-        hrQueryWrapper.ne("id", hr.getId());
+        // 排除进行修改时，对自身原本数据的查询
+        if (!ObjectUtils.isEmpty(hr.getId())) {
+            hrQueryWrapper.ne("id", hr.getId());
+        }
 
         // 判断用户名和电话都不重名
         hrQueryWrapper.and(i ->
