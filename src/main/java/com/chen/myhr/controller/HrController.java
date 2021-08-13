@@ -1,16 +1,15 @@
 package com.chen.myhr.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.chen.myhr.bean.Hr;
 import com.chen.myhr.bean.vo.request.HrReq;
 import com.chen.myhr.common.utils.CommonConstants;
 import com.chen.myhr.common.utils.Result;
-import com.chen.myhr.config.SecurityConfig;
 import com.chen.myhr.service.HrService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +25,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/system/hr")
 public class HrController {
+
+    /**
+     * 对应超级管理员的 id
+     */
+    int adminId = 3;
 
     @Resource
     HrService hrService;
@@ -69,19 +73,18 @@ public class HrController {
     public Result updateHr(@Valid @RequestBody Hr hr) {
 
         // ----- 只有超级管理员才能修改超级管理员 -----
-            // 获取当前登录角色
+            // 获取当前登录用户 id
             Integer id = ((Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-            int adminId = 3;
 
             // 当前登录用户为非超级管理员 并 对管理员进行操作
             if (id != adminId && hr.getId() == adminId) {
-                return Result.error().message("当前用户无权修改【超级管理员】");
+                return Result.error().message("您无权修改【超级管理员】");
             }
 
-            // 不允许修改超级管理员的状态
-            if (hr.getId() == adminId && !hr.isEnabled()) {
-                return Result.error().message("【超级管理员】的状态无法修改");
-            }
+        // 不允许修改超级管理员的状态
+        if (hr.getId() == adminId && !hr.isEnabled()) {
+            return Result.error().message("【超级管理员】的状态无法修改");
+        }
 
         // 检查用户名和手机号是否重复
         if (hrService.checkHrUsernameAndPhone(hr)) {
@@ -100,11 +103,38 @@ public class HrController {
     @PostMapping("/remove/{id}")
     public Result removeHr(@PathVariable Integer id) {
 
+        // 不允许删除超级管理员
+        if (id == adminId) {
+            return Result.error().message("【超级管理员】无法删除！");
+        }
+
         // 将同时删除用户与角色的关联
         if (hrService.removeHr(id)) {
             return Result.done().message("删除成功");
         } else {
             return Result.error().message("删除失败");
+        }
+    }
+
+    @ApiOperation("管理员直接重置用户密码（不需要旧密码）")
+    @PostMapping("/resetPassword")
+    public Result resetHrPassword(@RequestBody Hr hr) {
+
+        // ----- 超级管理员的密码只有其自己才能直接重置 -----
+            // 判断当前登录用户是否是超级管理员
+            Integer id = ((Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            if (id != adminId && hr.getId() == adminId) {
+                return Result.error().message("您无权直接重置【超级管理员】的密码");
+            }
+
+        // 根据 id 只更新密码字段
+        String encode = new BCryptPasswordEncoder().encode(hr.getPassword());
+        boolean reset = hrService.update(new UpdateWrapper<Hr>().eq("id", hr.getId()).set("password", encode));
+
+        if (reset) {
+            return Result.done().message("重置成功");
+        } else {
+            return Result.error().message("重置失败");
         }
     }
 }
