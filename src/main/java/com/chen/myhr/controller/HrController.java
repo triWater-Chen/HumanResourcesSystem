@@ -2,9 +2,12 @@ package com.chen.myhr.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.chen.myhr.bean.Hr;
+import com.chen.myhr.bean.Role;
 import com.chen.myhr.bean.vo.request.HrReq;
+import com.chen.myhr.bean.vo.request.HrUpdateReq;
 import com.chen.myhr.common.utils.CommonConstants;
 import com.chen.myhr.common.utils.Result;
+import com.chen.myhr.service.HrRoleService;
 import com.chen.myhr.service.HrService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +36,9 @@ public class HrController {
 
     @Resource
     HrService hrService;
+
+    @Resource
+    HrRoleService hrRoleService;
 
     @ApiOperation("按条件查询用户（不返回密码）")
     @GetMapping("/list")
@@ -135,6 +141,25 @@ public class HrController {
             return Result.done().message("重置成功");
         } else {
             return Result.error().message("重置失败");
+        }
+    }
+
+    @ApiOperation("根据用户 id 查询所属所有角色")
+    @GetMapping("/hrWithRole/{id}")
+    public Result getHrWithRole(@PathVariable Integer id) {
+
+        List<Role> hrWithRole = hrService.getHrWithRole(id);
+        return Result.done().data("roles", hrWithRole);
+    }
+
+    @ApiOperation("根据用户 id 更新所属所有角色")
+    @PostMapping("/hrUpdateByRole")
+    public Result hrUpdateByRole(@RequestBody HrUpdateReq req) {
+
+        if (hrRoleService.hrUpdateByRole(req)) {
+            return Result.done().message("更新成功");
+        } else {
+            return Result.error().message("更新失败");
         }
     }
 }

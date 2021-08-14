@@ -2,6 +2,7 @@ package com.chen.myhr.service;
 
 import com.chen.myhr.bean.Hr;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chen.myhr.bean.Role;
 import com.chen.myhr.bean.vo.request.HrReq;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -34,4 +35,11 @@ public interface HrService extends IService<Hr>, UserDetailsService {
      * @return boolean
      */
     boolean removeHr(Integer id);
+
+    /**
+     * 根据用户 id 查询所属所有角色
+     * @param id 用户 id
+     * @return List<Role>
+     */
+    List<Role> getHrWithRole(Integer id);
 }
