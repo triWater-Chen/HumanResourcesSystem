@@ -54,15 +54,21 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
             List<HrRole> hrRoles = hrRoleService.list(hrRoleQueryWrapper);
             // 若该用户下不具备角色，则不允许登录
             if (ObjectUtils.isEmpty(hrRoles)) {
-                throw new InternalAuthenticationServiceException("该用户下无角色");
+                throw new InternalAuthenticationServiceException("该用户下无角色，请联系管理员");
             }
 
-            // 2. 遍历上步得出的数据，通过获取其中的 rid，查出与 role 表中 id 相应数据
+            // 2. 遍历上步得出的数据，通过获取其中的 rid
             List<Integer> idList = new ArrayList<>();
             for (HrRole hrRole : hrRoles) {
                 idList.add(hrRole.getRid());
             }
-            List<Role> roles = roleService.listByIds(idList);
+            // 3.查出与 role 表中 id 相应数据，且该角色处于可用状态
+            List<Role> roles = roleService.getBaseMapper()
+                    .selectList(new QueryWrapper<Role>().in("id", idList).eq("enabled", true));
+            // 若该用户下不具备角色，则不允许登录
+            if (ObjectUtils.isEmpty(roles)) {
+                throw new InternalAuthenticationServiceException("该用户下无可用角色，请联系管理员");
+            }
 
             // 3.将上步得到的 role 表中数据插入 hr 表中 roles 字段
             hr.setRoles(roles);
@@ -131,5 +137,24 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
         // 最后删除该用户
         int delete = baseMapper.deleteById(id);
         return delete > 0;
+    }
+
+    @Override
+    public List<Role> getHrWithRole(Integer id) {
+
+        // 先通过 hr 的 id，查出与 hr_role 表中 hrid 相应数据
+        List<HrRole> hrRoles = hrRoleService.list(new QueryWrapper<HrRole>().eq("hrid", id));
+
+        // 如果 hr 没有对应的角色，直接返回空数组
+        if (ObjectUtils.isEmpty(hrRoles)) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> idList = new ArrayList<>();
+        // 遍历 hrRoles 数据，通过整合其中的 rid， 查询与 role 表中 id 相应数据
+        for (HrRole hrRole : hrRoles) {
+            idList.add(hrRole.getRid());
+        }
+        return roleService.listByIds(idList);
     }
 }

@@ -165,7 +165,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 } else if (e instanceof BadCredentialsException) {
                     result.message("账号或密码错误，请重新输入");
                 } else if (e instanceof InternalAuthenticationServiceException) {
-                    result.message("该用户下无角色，无法登录");
+                    result.message(e.getMessage());
                 }
                 out.write(new ObjectMapper().writeValueAsString(result));
                 out.flush();
