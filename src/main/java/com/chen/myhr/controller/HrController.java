@@ -156,6 +156,13 @@ public class HrController {
     @PostMapping("/hrUpdateByRole")
     public Result hrUpdateByRole(@RequestBody HrUpdateReq req) {
 
+        // ----- 超级管理员的角色只有其自己才能进行分配 -----
+            // 判断当前登录用户是否是超级管理员
+            Integer id = ((Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            if (id != adminId && req.getId() == adminId) {
+                return Result.error().message("您无权对【超级管理员】进行角色管理");
+            }
+
         if (hrRoleService.hrUpdateByRole(req)) {
             return Result.done().message("更新成功");
         } else {

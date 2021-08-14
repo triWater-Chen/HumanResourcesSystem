@@ -2,6 +2,7 @@ package com.chen.myhr.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chen.myhr.bean.Hr;
 import com.chen.myhr.bean.MenuRole;
 import com.chen.myhr.bean.Role;
 import com.chen.myhr.bean.vo.request.RolePageReq;
@@ -13,6 +14,7 @@ import com.chen.myhr.service.MenuService;
 import com.chen.myhr.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/system/basic/role")
 public class RoleController {
+
+    /**
+     * 对应系统管理员的 id
+     */
+    int adminId = 6;
 
     @Resource
     RoleService roleService;
@@ -92,6 +99,15 @@ public class RoleController {
 
         // 此处使用数据库来判断字段重复（因为查询名称没排除被修改该行数据）
 
+        // ----- 只有超级管理员才能修改超级管理员 -----
+        // 获取当前登录用户 id
+            Integer id = ((Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+            // 当前登录用户为非超级管理员 并 对管理员进行操作
+            if (id != adminId && req.getId() == adminId) {
+                return Result.error().message("您无权修改【系统管理员】");
+            }
+
         if (roleService.saveOrUpdateRoleWithMenu(req)) {
             return Result.done().message("更新成功");
         } else {
@@ -102,6 +118,13 @@ public class RoleController {
     @ApiOperation("批量删除角色（将会删除 menu_role 和 hr_role 相关数据")
     @PostMapping("/removeBatch")
     public Result removeBatchRole(@RequestBody List<Integer> ids) {
+
+        // 不允许删除超级管理员
+        for (Integer id : ids) {
+            if (id == adminId) {
+                return Result.error().message("【系统管理员】无法删除！");
+            }
+        }
 
         if (roleService.removeBatchRoleWithMenu(ids)) {
             return Result.done().message("删除成功");
