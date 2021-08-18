@@ -99,14 +99,16 @@ public class RoleController {
 
         // 此处使用数据库来判断字段重复（因为查询名称没排除被修改该行数据）
 
-        // ----- 只有超级管理员才能修改超级管理员 -----
-        // 获取当前登录用户 id
+        // ----- 在修改时，只有超级管理员才能修改超级管理员 -----
+        if (!ObjectUtils.isEmpty(req.getId())) {
+            // 获取当前登录用户 id
             Integer id = ((Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
             // 当前登录用户为非超级管理员 并 对管理员进行操作
             if (id != adminId && req.getId() == adminId) {
                 return Result.error().message("您无权修改【系统管理员】");
             }
+        }
 
         if (roleService.saveOrUpdateRoleWithMenu(req)) {
             return Result.done().message("更新成功");
