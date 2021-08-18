@@ -12,7 +12,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 /**
  * @author Chen
@@ -34,6 +36,7 @@ public class Employee implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "性别")
+    @NotEmpty(message = "【性别】不能为空")
     private String gender;
 
     @ApiModelProperty(value = "出生日期")
@@ -41,6 +44,7 @@ public class Employee implements Serializable {
     private Date birthday;
 
     @ApiModelProperty(value = "身份证号")
+    @Pattern(regexp = "(^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$)|(^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{2}$)", message = "【身份证号】格式不正确")
     @TableField("idCard")
     private String idCard;
 
@@ -60,9 +64,11 @@ public class Employee implements Serializable {
     private Integer politicId;
 
     @ApiModelProperty(value = "邮箱")
+    @Email
     private String email;
 
     @ApiModelProperty(value = "电话号码")
+    @Pattern(regexp = "^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$", message = "【电话号码】格式不正确")
     private String phone;
 
     @ApiModelProperty(value = "联系地址")

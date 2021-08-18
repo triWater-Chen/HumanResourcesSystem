@@ -62,10 +62,11 @@ public class Hr implements Serializable, UserDetails {
     @Getter(value = AccessLevel.NONE)
     private Boolean enabled;
 
-    @NotEmpty(message = "【用户名】不能为空")
+    @Pattern(regexp = "^[A-Za-z][a-zA-Z0-9]\\w{0,10}$", message = "【用户名】格式不正确")
     @ApiModelProperty(value = "用户名")
     private String username;
 
+    @Pattern(regexp = "^.*(?=.{6,})(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[.!@#$%^&*? ]).*$", message = "【密码】格式不正确")
     @ApiModelProperty(value = "密码")
     private String password;
 
