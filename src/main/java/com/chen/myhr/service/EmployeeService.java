@@ -17,4 +17,18 @@ public interface EmployeeService extends IService<Employee> {
      * @return Page<Employee>
      */
     Page<Employee> listByCondition(EmployeePageReq req);
+
+    /**
+     * 判断员工身份证是否重复
+     * @param idCard 身份证 id
+     * @return boolean
+     */
+    boolean checkEmployeeIdCard(String idCard);
+
+    /**
+     * 添加员工
+     * @param employee 员工信息
+     * @return boolean
+     */
+    boolean addEmployee(Employee employee);
 }

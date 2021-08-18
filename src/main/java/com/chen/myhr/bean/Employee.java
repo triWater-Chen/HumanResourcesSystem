@@ -138,10 +138,6 @@ public class Employee implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date endContract;
 
-    @ApiModelProperty(value = "工龄")
-    @TableField("workAge")
-    private Integer workAge;
-
     @ApiModelProperty(value = "存放用户所具备的国籍")
     @TableField(exist = false)
     private Nation nation;

@@ -12,6 +12,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +38,10 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
     @Resource
     PoliticsstatusService politicsstatusService;
+
+    SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+    DecimalFormat decimalFormat = new DecimalFormat("##.00");
 
     @Override
     public Page<Employee> listByCondition(EmployeePageReq req) {
@@ -67,7 +74,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         if (StringUtils.hasLength(req.getEndTime())) {
             employeeQueryWrapper.like("beginDate", req.getEndTime());
         }
-        employeeQueryWrapper.orderByAsc("id");
+        employeeQueryWrapper.orderByDesc("id");
 
         Page<Employee> employeePage = baseMapper.selectPage(page, employeeQueryWrapper);
         List<Employee> employees = employeePage.getRecords();
@@ -90,5 +97,29 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         // 将最终值传入分页数据中
         return employeePage.setRecords(employees);
+    }
+
+    @Override
+    public boolean checkEmployeeIdCard(String idCard) {
+
+        Integer count = baseMapper.selectCount(new QueryWrapper<Employee>().eq("idCard", idCard));
+        return count > 0;
+    }
+
+    @Override
+    public boolean addEmployee(Employee employee) {
+
+        // 计算合同期限
+        Date beginContract = employee.getBeginContract();
+        Date endContract = employee.getEndContract();
+        double month = (Double.parseDouble(yearFormat.format(endContract)) - Double.parseDouble(yearFormat.format(beginContract))) * 12
+                + (Double.parseDouble(monthFormat.format(endContract)) - Double.parseDouble(monthFormat.format(beginContract)));
+        employee.setContractTerm(Double.parseDouble(decimalFormat.format(month / 12)));
+
+        // 计算工号：取出当前最大工号并 +1
+        employee.setWorkId(String.format("%08d", baseMapper.maxWorkId() + 1));
+
+        int insert = baseMapper.insert(employee);
+        return insert > 0;
     }
 }
