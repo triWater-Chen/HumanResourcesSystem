@@ -102,7 +102,7 @@ public class EmployeeController {
     @PostMapping("/add")
     public Result addEmployee(@Valid @RequestBody Employee employee) {
 
-        if (employeeService.checkEmployeeIdCard(employee.getIdCard())) {
+        if (employeeService.checkEmployeeIdCard(employee)) {
             return Result.error().message("添加失败，该身份证号已存在，请核对后再添加");
         }
 
@@ -110,6 +110,30 @@ public class EmployeeController {
             return Result.done().message("添加成功");
         }
         return Result.error().message("添加失败");
+    }
+
+    @ApiOperation("修改员工")
+    @PostMapping("/update")
+    public Result updateEmployee(@Valid @RequestBody Employee employee) {
+
+        if (employeeService.checkEmployeeIdCard(employee)) {
+            return Result.error().message("修改失败，该身份证号已存在，请核对后再添加");
+        }
+
+        if (employeeService.updateEmployee(employee)) {
+            return Result.done().message("修改成功");
+        }
+        return Result.error().message("修改失败");
+    }
+
+    @ApiOperation("批量删除员工")
+    @PostMapping("/removeBatch")
+    public Result removeBatchEmployee(@RequestBody List<Integer> ids) {
+
+        if (employeeService.removeByIds(ids)) {
+            return Result.done().message("删除成功");
+        }
+        return Result.error().message("删除失败");
     }
 }
 

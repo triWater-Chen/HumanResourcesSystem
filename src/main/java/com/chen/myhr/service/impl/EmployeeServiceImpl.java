@@ -100,9 +100,17 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     }
 
     @Override
-    public boolean checkEmployeeIdCard(String idCard) {
+    public boolean checkEmployeeIdCard(Employee employee) {
 
-        Integer count = baseMapper.selectCount(new QueryWrapper<Employee>().eq("idCard", idCard));
+        QueryWrapper<Employee> employeeQueryWrapper = new QueryWrapper<>();
+        // 排除进行修改时，对自身数据的查询
+        if (!ObjectUtils.isEmpty(employee.getId())) {
+            employeeQueryWrapper.ne("id", employee.getId());
+        }
+        // 判断身份证号不重名
+        employeeQueryWrapper.eq("idCard", employee.getIdCard());
+
+        Integer count = baseMapper.selectCount(employeeQueryWrapper);
         return count > 0;
     }
 
@@ -110,16 +118,35 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     public boolean addEmployee(Employee employee) {
 
         // 计算合同期限
-        Date beginContract = employee.getBeginContract();
-        Date endContract = employee.getEndContract();
-        double month = (Double.parseDouble(yearFormat.format(endContract)) - Double.parseDouble(yearFormat.format(beginContract))) * 12
-                + (Double.parseDouble(monthFormat.format(endContract)) - Double.parseDouble(monthFormat.format(beginContract)));
-        employee.setContractTerm(Double.parseDouble(decimalFormat.format(month / 12)));
+        calculationContract(employee);
 
         // 计算工号：取出当前最大工号并 +1
         employee.setWorkId(String.format("%08d", baseMapper.maxWorkId() + 1));
 
         int insert = baseMapper.insert(employee);
         return insert > 0;
+    }
+
+    @Override
+    public boolean updateEmployee(Employee employee) {
+
+        // 计算合同期限
+        calculationContract(employee);
+
+        int update = baseMapper.updateById(employee);
+        return update > 0;
+    }
+
+    /**
+     * 计算合同期限
+     * @param employee 员工信息
+     */
+    private void calculationContract(Employee employee) {
+
+        Date beginContract = employee.getBeginContract();
+        Date endContract = employee.getEndContract();
+        double month = (Double.parseDouble(yearFormat.format(endContract)) - Double.parseDouble(yearFormat.format(beginContract))) * 12
+                + (Double.parseDouble(monthFormat.format(endContract)) - Double.parseDouble(monthFormat.format(beginContract)));
+        employee.setContractTerm(Double.parseDouble(decimalFormat.format(month / 12)));
     }
 }

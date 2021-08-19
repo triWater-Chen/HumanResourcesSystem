@@ -20,10 +20,10 @@ public interface EmployeeService extends IService<Employee> {
 
     /**
      * 判断员工身份证是否重复
-     * @param idCard 身份证 id
+     * @param employee 员工信息
      * @return boolean
      */
-    boolean checkEmployeeIdCard(String idCard);
+    boolean checkEmployeeIdCard(Employee employee);
 
     /**
      * 添加员工
@@ -31,4 +31,11 @@ public interface EmployeeService extends IService<Employee> {
      * @return boolean
      */
     boolean addEmployee(Employee employee);
+
+    /**
+     * 修改员工
+     * @param employee 员工信息
+     * @return boolean
+     */
+    boolean updateEmployee(Employee employee);
 }
