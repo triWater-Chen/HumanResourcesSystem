@@ -52,4 +52,15 @@ public class GlobalExceptionHandler {
         LOG.warn("参数校验失败：{}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         return Result.error().message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
+
+    /**
+     * 统一处理：自定义异常（针对 MyException 类的异常）
+     * @return Result
+     */
+    @ExceptionHandler(value = MyException.class)
+    public Result validExceptionHandler(MyException e) {
+
+        LOG.warn("自定义异常：{}", e.getCode().getDesc());
+        return Result.error().message(e.getCode().getDesc());
+    }
 }
