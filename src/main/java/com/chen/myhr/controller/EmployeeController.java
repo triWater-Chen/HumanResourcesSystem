@@ -6,6 +6,7 @@ import com.chen.myhr.bean.*;
 import com.chen.myhr.bean.vo.request.EmployeePageReq;
 import com.chen.myhr.bean.vo.result.DepartmentWithChildren;
 import com.chen.myhr.common.utils.Result;
+import com.chen.myhr.common.utils.poi.ExcelUtil;
 import com.chen.myhr.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -134,6 +135,16 @@ public class EmployeeController {
             return Result.done().message("删除成功");
         }
         return Result.error().message("删除失败");
+    }
+
+    @ApiOperation("按条件导出员工")
+    @GetMapping("/export")
+    public Result exportEmployee(EmployeePageReq req) {
+
+        List<Employee> employees = employeeService.listWithoutPage(req);
+        ExcelUtil<Employee> excelUtil = new ExcelUtil<>(Employee.class);
+
+        return excelUtil.exportExcel(employees, "员工详情");
     }
 }
 

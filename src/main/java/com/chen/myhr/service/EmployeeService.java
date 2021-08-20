@@ -5,6 +5,8 @@ import com.chen.myhr.bean.Employee;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chen.myhr.bean.vo.request.EmployeePageReq;
 
+import java.util.List;
+
 /**
  * @author Chen
  * @since 2021-07-28
@@ -17,6 +19,13 @@ public interface EmployeeService extends IService<Employee> {
      * @return Page<Employee>
      */
     Page<Employee> listByCondition(EmployeePageReq req);
+
+    /**
+     * 按条件查询员工，不进行分页，专用于导出 excel
+     * @param req 查询条件
+     * @return List<Employee>
+     */
+    List<Employee> listWithoutPage(EmployeePageReq req);
 
     /**
      * 判断员工身份证是否重复
