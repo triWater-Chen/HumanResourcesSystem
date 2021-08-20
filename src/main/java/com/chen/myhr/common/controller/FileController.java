@@ -3,7 +3,9 @@ package com.chen.myhr.common.controller;
 import com.chen.myhr.common.exception.MyException;
 import com.chen.myhr.common.exception.MyExceptionCode;
 import com.chen.myhr.common.utils.CommonConstants;
+import com.chen.myhr.common.utils.MyUtils.MyDate;
 import com.chen.myhr.common.utils.MyUtils.MyFile;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @description 文件的上传、下载
  * @create 2021-08-20
  */
+@Api(tags = {"文件的上传、下载"})
 @RestController
 @RequestMapping("/system")
 public class FileController {
@@ -31,7 +34,7 @@ public class FileController {
             if (!MyFile.checkAllowDownload(fileName)) {
                 throw new MyException(MyExceptionCode.ERROR_FILE_NAME);
             }
-            String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
+            String realFileName = MyDate.getTime() + fileName.substring(fileName.indexOf("_"));
             String filePath = CommonConstants.DOWNLOAD_PATH + fileName;
 
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
