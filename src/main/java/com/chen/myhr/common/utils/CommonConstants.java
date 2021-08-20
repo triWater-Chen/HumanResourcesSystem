@@ -31,4 +31,20 @@ public class CommonConstants {
      * 标识：sql 中出现不符合查询条件的情况_B
      */
     public static final String STATUS_B = "OUTb";
+
+    /**
+     * 本地路基
+     */
+    public static final String LOCAL_PATH = "D:/";
+
+    /**
+     * 下载路基
+     */
+    public static final String DOWNLOAD_PATH = "D:/download/";
+
+    /**
+     * 上传路基
+     */
+    public static final String UPLOAD_PATH = "D:/upload/";
+
 }
