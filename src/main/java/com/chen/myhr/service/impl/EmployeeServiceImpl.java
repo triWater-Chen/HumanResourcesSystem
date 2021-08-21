@@ -4,10 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chen.myhr.bean.*;
 import com.chen.myhr.bean.vo.request.EmployeePageReq;
+import com.chen.myhr.common.exception.MyException;
+import com.chen.myhr.common.exception.MyExceptionCode;
 import com.chen.myhr.mapper.EmployeeMapper;
 import com.chen.myhr.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -23,6 +28,8 @@ import java.util.List;
  */
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
+
+    private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     @Resource
     JoblevelService joblevelService;
@@ -110,6 +117,71 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         int update = baseMapper.updateById(employee);
         return update > 0;
+    }
+
+    @Override
+    public String importEmployees(List<Employee> employees, boolean updateSupport) {
+
+        if (CollectionUtils.isEmpty(employees)) {
+            throw new MyException(MyExceptionCode.IMPORT_EXCEL_EMPTY);
+        }
+        int successCount = 0;
+        int failureCount = 0;
+        StringBuilder successMessage = new StringBuilder();
+        StringBuilder failureMessage = new StringBuilder();
+
+        for (Employee employee : employees) {
+            try {
+                // 验证身份证是否唯一
+                Integer count = baseMapper.selectCount(new QueryWrapper<Employee>().eq("idCard", employee.getIdCard()));
+                if (count == 0) {
+                    // 进行添加
+
+                    employee.setId(null);
+                    addEmployee(employee);
+                    successCount++;
+                    successMessage.append("<br/>")
+                            .append(successCount)
+                            .append("、员工 ")
+                            .append(employee.getName())
+                            .append(" 导入成功");
+                } else if (updateSupport) {
+                    // 进行更新
+
+                    updateEmployee(employee);
+                    successCount++;
+                    successMessage.append("<br/>")
+                            .append(successCount)
+                            .append("、员工 ")
+                            .append(employee.getName())
+                            .append(" 更新成功");
+                } else {
+
+                    failureCount++;
+                    failureMessage.append("<br/>")
+                            .append(failureCount)
+                            .append("、员工 ")
+                            .append(employee.getName())
+                            .append(" 的身份证号：")
+                            .append(employee.getIdCard())
+                            .append(" 已存在");
+                }
+            } catch (Exception e) {
+
+                failureCount++;
+                String msg = "<br/>" + failureCount + "、员工 " + employee.getName() + " 导入失败：";
+                failureMessage.append(msg).append(e.getMessage());
+                log.error(msg, e);
+            }
+        }
+
+        if (failureCount > 0) {
+            failureMessage.insert(0, "很抱歉，存在导入失败！共 " + failureCount + " 条数据格式不正确，错误如下：");
+            return failureMessage.toString();
+        } else {
+            successMessage.insert(0, "数据已全部导入成功！共" + successCount + " 条，数据如下：");
+            return successMessage.toString();
+        }
     }
 
     /**

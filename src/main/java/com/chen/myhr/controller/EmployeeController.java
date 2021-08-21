@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -145,6 +146,21 @@ public class EmployeeController {
         ExcelUtil<Employee> excelUtil = new ExcelUtil<>(Employee.class);
 
         return excelUtil.exportExcel(employees, "员工详情");
+    }
+
+    @ApiOperation("导入员工")
+    @PostMapping("/import")
+    public Result importEmployee(MultipartFile file, boolean updateSupport) throws Exception {
+
+        ExcelUtil<Employee> excelUtil = new ExcelUtil<>(Employee.class);
+        List<Employee> employees = excelUtil.importExcel(file.getInputStream());
+
+        String message = employeeService.importEmployees(employees, updateSupport);
+        String failure = "很抱歉，导入失败！";
+        if (message.contains(failure)) {
+            return Result.error().message(message);
+        }
+        return Result.done().message(message);
     }
 }
 

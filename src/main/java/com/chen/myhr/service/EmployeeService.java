@@ -47,4 +47,12 @@ public interface EmployeeService extends IService<Employee> {
      * @return boolean
      */
     boolean updateEmployee(Employee employee);
+
+    /**
+     * Excel 导入员工设置
+     * @param employees 员工
+     * @param updateSupport 是否进行更新而非添加
+     * @return String 信息
+     */
+    String importEmployees(List<Employee> employees, boolean updateSupport);
 }
