@@ -11,7 +11,8 @@ public enum MyExceptionCode {
      * 对应输出的提示信息
      */
     EXPORT_EXCEL_FAIL("导出Excel失败，请联系网站管理员！"),
-    ERROR_FILE_NAME("文件名非法，禁止下载");
+    ERROR_FILE_NAME("文件名非法，禁止下载"),
+    IMPORT_EXCEL_EMPTY("导入数据不能为空"),
     ;
 
     private String desc;
