@@ -29,22 +29,22 @@ public class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Excel(name = "员工序号", cellType = Excel.ColumnType.NUMERIC, prompt = "员工编号")
+    @Excel(name = "员工编号", cellType = Excel.ColumnType.NUMERIC, prompt = "员工编号")
     @ApiModelProperty(value = "员工编号")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @Excel(name = "员工名称")
+    @Excel(name = "姓名")
     @ApiModelProperty(value = "员工姓名")
     @NotEmpty(message = "【姓名】不能为空")
     private String name;
 
-    @Excel(name = "工号")
+    @Excel(name = "工号", type = Excel.Type.EXPORT)
     @ApiModelProperty(value = "工号")
     @TableField("workID")
     private String workId;
 
-    @Excel(name = "员工性别")
+    @Excel(name = "性别", combo = {"男", "女"})
     @ApiModelProperty(value = "性别")
     @NotEmpty(message = "【性别】不能为空")
     private String gender;
@@ -70,11 +70,11 @@ public class Employee implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date birthday;
 
-    @Excel(name = "婚姻状况")
+    @Excel(name = "婚姻状况", combo = {"已婚", "未婚", "离异"})
     @ApiModelProperty(value = "婚姻状况")
     private String wedlock;
 
-    @Excel(name = "民族编号", cellType = Excel.ColumnType.NUMERIC, type = Excel.Type.IMPORT)
+    @Excel(name = "民族编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "民族")
     @TableField("nationId")
     private Integer nationId;
@@ -91,7 +91,7 @@ public class Employee implements Serializable {
     @TableField("nativePlace")
     private String nativePlace;
 
-    @Excel(name = "政治面貌编号", cellType = Excel.ColumnType.NUMERIC, type = Excel.Type.IMPORT)
+    @Excel(name = "政治面貌编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "政治面貌")
     @TableField("politicId")
     private Integer politicId;
@@ -107,7 +107,7 @@ public class Employee implements Serializable {
     @ApiModelProperty(value = "联系地址")
     private String address;
 
-    @Excel(name = "部门编号", cellType = Excel.ColumnType.NUMERIC, type = Excel.Type.IMPORT)
+    @Excel(name = "部门编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "所属部门")
     @TableField("departmentId")
     private Integer departmentId;
@@ -119,7 +119,7 @@ public class Employee implements Serializable {
     @TableField(exist = false)
     private Department department;
 
-    @Excel(name = "职位编号", cellType = Excel.ColumnType.NUMERIC, type = Excel.Type.IMPORT)
+    @Excel(name = "职位编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "职位ID")
     @TableField("posId")
     private Integer posId;
@@ -131,7 +131,7 @@ public class Employee implements Serializable {
     @TableField(exist = false)
     private Position position;
 
-    @Excel(name = "职称编号", cellType = Excel.ColumnType.NUMERIC, type = Excel.Type.IMPORT)
+    @Excel(name = "职称编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "职称ID")
     @TableField("jobLevelId")
     private Integer jobLevelId;
@@ -143,12 +143,12 @@ public class Employee implements Serializable {
     @TableField(exist = false)
     private Joblevel jobLevel;
 
-    @Excel(name = "聘用形式")
+    @Excel(name = "聘用形式", combo = {"劳动合同", "劳务合同"})
     @ApiModelProperty(value = "聘用形式")
     @TableField("engageForm")
     private String engageForm;
 
-    @Excel(name = "最高学历")
+    @Excel(name = "最高学历", combo = {"博士", "硕士", "本科", "大专", "高中", "初中", "小学", "其他"})
     @ApiModelProperty(value = "最高学历")
     @TableField("tiptopDegree")
     private String tiptopDegree;
@@ -185,13 +185,13 @@ public class Employee implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date endContract;
 
-    @Excel(name = "合同期限")
+    @Excel(name = "合同期限", cellType = Excel.ColumnType.NUMERIC, type = Excel.Type.EXPORT)
     @ApiModelProperty(value = "合同期限")
     @TableField("contractTerm")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Double contractTerm;
 
-    @Excel(name = "在职状态")
+    @Excel(name = "在职状态", combo = {"在职", "离职"})
     @ApiModelProperty(value = "在职状态")
     @TableField("workState")
     private String workState;
