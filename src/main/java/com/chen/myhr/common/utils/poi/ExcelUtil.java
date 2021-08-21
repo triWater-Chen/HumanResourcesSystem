@@ -403,14 +403,13 @@ public class ExcelUtil<T> {
     /**
      * 创建单元格
      */
-    public Cell createCell(Excel attr, Row row, int column) {
+    public void createCell(Excel attr, Row row, int column) {
         // 创建列
         Cell cell = row.createCell(column);
         // 写入列信息
         cell.setCellValue(attr.name());
         setDataValidation(attr, row, column);
         cell.setCellStyle(styles.get("header"));
-        return cell;
     }
 
     /**
@@ -489,8 +488,8 @@ public class ExcelUtil<T> {
     /**
      * 添加单元格
      */
-    public Cell addCell(Excel attr, Row row, T vo, Field field, int column) {
-        Cell cell = null;
+    public void addCell(Excel attr, Row row, T vo, Field field, int column) {
+        Cell cell;
         try {
             // 设置行高
             row.setHeight(maxHeight);
@@ -521,7 +520,6 @@ public class ExcelUtil<T> {
         } catch (Exception e) {
             log.error("导出 Excel失败 {}", e.getMessage());
         }
-        return cell;
     }
 
     /**
@@ -812,7 +810,8 @@ public class ExcelUtil<T> {
                 if (cell.getCellType() == CellType.NUMERIC || cell.getCellType() == CellType.FORMULA) {
                     val = cell.getNumericCellValue();
                     if (DateUtil.isCellDateFormatted(cell)) {
-                        val = DateUtil.getJavaDate((Double) val); // POI Excel 日期格式转换
+                        // POI Excel 日期格式转换
+                        val = DateUtil.getJavaDate((Double) val);
                     } else {
                         if ((Double) val % 1 != 0) {
                             val = new BigDecimal(val.toString());
