@@ -132,9 +132,14 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         for (Employee employee : employees) {
             try {
-                // 验证身份证是否唯一
+                // 用于判断添加时 身份证号 是否唯一
                 Integer count = baseMapper.selectCount(new QueryWrapper<Employee>().eq("idCard", employee.getIdCard()));
-                if (count == 0) {
+
+                // 用于判断更新时 身份证号 是否唯一
+                // 判断添加分开不使用原因在于：employee 带有 id，添加需要 id 为空，会导致错误
+                boolean updateEnabled = checkEmployeeIdCard(employee);
+
+                if (count == 0 && !updateSupport) {
                     // 进行添加
 
                     employee.setId(null);
@@ -145,7 +150,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
                             .append("、员工 ")
                             .append(employee.getName())
                             .append(" 导入成功");
-                } else if (updateSupport) {
+                } else if (updateSupport && !updateEnabled) {
                     // 进行更新
 
                     updateEmployee(employee);
@@ -230,25 +235,37 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             employeeQueryWrapper.like("name", req.getName());
         }
         if (StringUtils.hasLength(req.getIdCard())) {
-            employeeQueryWrapper.like("idCard", req.getIdCard());
+            employeeQueryWrapper.eq("idCard", req.getIdCard());
         }
         if (StringUtils.hasLength(req.getWorkId())) {
             employeeQueryWrapper.like("workId", req.getWorkId());
         }
         if (!ObjectUtils.isEmpty(req.getJobLevelId())) {
-            employeeQueryWrapper.like("jobLeveId", req.getJobLevelId());
+            employeeQueryWrapper.eq("jobLeveId", req.getJobLevelId());
         }
         if (!ObjectUtils.isEmpty(req.getPosId())) {
-            employeeQueryWrapper.like("posId", req.getPosId());
+            employeeQueryWrapper.eq("posId", req.getPosId());
         }
         if (!ObjectUtils.isEmpty(req.getDepartmentId())) {
-            employeeQueryWrapper.like("departmentId", req.getDepartmentId());
+            employeeQueryWrapper.eq("departmentId", req.getDepartmentId());
+        }
+        if (!ObjectUtils.isEmpty(req.getNationId())) {
+            employeeQueryWrapper.eq("nationId", req.getNationId());
+        }
+        if (!ObjectUtils.isEmpty(req.getPoliticId())) {
+            employeeQueryWrapper.eq("politicId", req.getPoliticId());
+        }
+        if (StringUtils.hasLength(req.getEngageForm())) {
+            employeeQueryWrapper.eq("engageForm", req.getEngageForm());
+        }
+        if (StringUtils.hasLength(req.getWorkState())) {
+            employeeQueryWrapper.eq("workState", req.getWorkState());
         }
         if (StringUtils.hasLength(req.getBeginTime())) {
-            employeeQueryWrapper.like("beginDate", req.getBeginTime());
+            employeeQueryWrapper.ge("beginDate", req.getBeginTime());
         }
         if (StringUtils.hasLength(req.getEndTime())) {
-            employeeQueryWrapper.like("beginDate", req.getEndTime());
+            employeeQueryWrapper.le("beginDate", req.getEndTime());
         }
         employeeQueryWrapper.orderByDesc("id");
     }

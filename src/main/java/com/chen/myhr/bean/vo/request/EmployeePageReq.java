@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @ApiModel(value="EmployeePageReq参数", description="封装对员工进行查询的带分页请求参数")
 public class EmployeePageReq extends PageReq {
 
+    @ApiModelProperty(value = "员工名")
     private String name;
 
     @ApiModelProperty(value = "身份证号")
@@ -32,6 +33,18 @@ public class EmployeePageReq extends PageReq {
 
     @ApiModelProperty(value = "部门ID")
     private Integer departmentId;
+
+    @ApiModelProperty(value = "民族ID")
+    private Integer nationId;
+
+    @ApiModelProperty(value = "政治面貌ID")
+    private Integer politicId;
+
+    @ApiModelProperty(value = "聘用形式")
+    private String engageForm;
+
+    @ApiModelProperty(value = "在职状态")
+    private String workState;
 
     @ApiModelProperty(value = "入职日期（初）")
     private String beginTime;
