@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -72,11 +73,13 @@ public class Employee implements Serializable {
 
     @Excel(name = "婚姻状况", combo = {"已婚", "未婚", "离异"})
     @ApiModelProperty(value = "婚姻状况")
+    @NotEmpty(message = "【婚姻状况】不能为空")
     private String wedlock;
 
     @Excel(name = "民族编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "民族")
     @TableField("nationId")
+    @NotNull(message = "【民族编号】不能为空")
     private Integer nationId;
 
     @Excels({
@@ -89,11 +92,13 @@ public class Employee implements Serializable {
     @Excel(name = "籍贯")
     @ApiModelProperty(value = "籍贯")
     @TableField("nativePlace")
+    @NotEmpty(message = "【籍贯】不能为空")
     private String nativePlace;
 
     @Excel(name = "政治面貌编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "政治面貌")
     @TableField("politicId")
+    @NotNull(message = "【政治面貌编号】不能为空")
     private Integer politicId;
 
     @Excels({
@@ -110,6 +115,7 @@ public class Employee implements Serializable {
     @Excel(name = "部门编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "所属部门")
     @TableField("departmentId")
+    @NotNull(message = "【部门编号】不能为空")
     private Integer departmentId;
 
     @Excels({
@@ -122,6 +128,7 @@ public class Employee implements Serializable {
     @Excel(name = "职位编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "职位ID")
     @TableField("posId")
+    @NotNull(message = "【职位编号】不能为空")
     private Integer posId;
 
     @Excels({
@@ -134,6 +141,7 @@ public class Employee implements Serializable {
     @Excel(name = "职称编号", type = Excel.Type.IMPORT)
     @ApiModelProperty(value = "职称ID")
     @TableField("jobLevelId")
+    @NotNull(message = "【职称编号】不能为空")
     private Integer jobLevelId;
 
     @Excels({
@@ -146,19 +154,23 @@ public class Employee implements Serializable {
     @Excel(name = "聘用形式", combo = {"劳动合同", "劳务合同"})
     @ApiModelProperty(value = "聘用形式")
     @TableField("engageForm")
+    @NotEmpty(message = "【聘用形式】不能为空")
     private String engageForm;
 
     @Excel(name = "最高学历", combo = {"博士", "硕士", "本科", "大专", "高中", "初中", "小学", "其他"})
     @ApiModelProperty(value = "最高学历")
     @TableField("tiptopDegree")
+    @NotEmpty(message = "【最高学历】不能为空")
     private String tiptopDegree;
 
     @Excel(name = "所属专业")
     @ApiModelProperty(value = "所属专业")
+    @NotEmpty(message = "【所属专业】不能为空")
     private String specialty;
 
     @Excel(name = "毕业院校")
     @ApiModelProperty(value = "毕业院校")
+    @NotEmpty(message = "【毕业院校】不能为空")
     private String school;
 
     @Excel(name = "入职日期", width = 20, dateFormat = "yyyy-MM-dd")
@@ -188,12 +200,12 @@ public class Employee implements Serializable {
     @Excel(name = "合同期限", cellType = Excel.ColumnType.NUMERIC, type = Excel.Type.EXPORT)
     @ApiModelProperty(value = "合同期限")
     @TableField("contractTerm")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Double contractTerm;
 
     @Excel(name = "在职状态", combo = {"在职", "离职"})
     @ApiModelProperty(value = "在职状态")
     @TableField("workState")
+    @NotEmpty(message = "【在职状态】不能为空")
     private String workState;
 
     @Excel(name = "离职日期", width = 20, dateFormat = "yyyy-MM-dd")
