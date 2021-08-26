@@ -9,4 +9,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SalaryService extends IService<Salary> {
 
+    /**
+     * 检查工资账套名称是否唯一
+     * @param salary 工资账套详情
+     * @return boolean
+     */
+    boolean checkName(Salary salary);
 }
