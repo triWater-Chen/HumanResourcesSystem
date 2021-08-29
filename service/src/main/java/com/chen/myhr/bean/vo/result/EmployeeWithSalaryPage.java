@@ -12,7 +12,7 @@ import java.util.List;
  * @create 2021-08-26
  */
 @Data
-@ApiModel(value="DepartmentWithChildren参数", description="封装查询部门树的返回参数")
+@ApiModel(value="EmployeeWithSalaryPage参数", description="将查询员工账套的返回参数封装为分页数据")
 public class EmployeeWithSalaryPage {
 
     @ApiModelProperty(value = "总页数")

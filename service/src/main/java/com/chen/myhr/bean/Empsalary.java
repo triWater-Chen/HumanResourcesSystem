@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author Chen
  * @since 2021-07-28
@@ -22,8 +24,10 @@ public class Empsalary implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @NotNull(message = "【员工 id】不能为空")
     private Integer eid;
 
+    @NotNull(message = "【账套 id】不能为空")
     private Integer sid;
 
 

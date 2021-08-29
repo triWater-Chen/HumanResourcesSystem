@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @create 2021-08-26
  */
 @Data
-@ApiModel(value="DepartmentWithChildren参数", description="封装查询部门树的返回参数")
+@ApiModel(value="EmployeeWithSalary参数", description="封装查询员工账套的返回参数")
 public class EmployeeWithSalary implements Serializable {
 
     @ApiModelProperty(value = "id")
