@@ -1,18 +1,19 @@
 package com.chen.myhr.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chen.config.result.Result;
+import com.chen.myhr.bean.Empsalary;
+import com.chen.myhr.bean.Salary;
 import com.chen.myhr.bean.vo.request.EmployeePageReq;
 import com.chen.myhr.bean.vo.result.DepartmentWithChildren;
 import com.chen.myhr.bean.vo.result.EmployeeWithSalaryPage;
 import com.chen.myhr.service.DepartmentService;
 import com.chen.myhr.service.EmpsalaryService;
+import com.chen.myhr.service.SalaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -29,6 +30,9 @@ public class EmpSalaryController {
 
     @Resource
     EmpsalaryService empsalaryService;
+
+    @Resource
+    SalaryService salaryService;
 
     @Resource
     DepartmentService departmentService;
@@ -50,6 +54,24 @@ public class EmpSalaryController {
 
         List<DepartmentWithChildren> departments = departmentService.getDepartmentsTree();
         return Result.done().data("departments", departments);
+    }
+
+    @ApiOperation("查询工资账套列表")
+    @GetMapping("/sobs")
+    public Result getListOfSobs() {
+
+        List<Salary> sobs = salaryService.getBaseMapper().selectList(new QueryWrapper<Salary>().select("id", "name"));
+        return Result.done().data("sobs", sobs);
+    }
+
+    @ApiOperation("修改员工工资账套")
+    @PostMapping("/update")
+    public Result updateEmpSalary(@Valid @RequestBody Empsalary empsalary) {
+
+        if (empsalaryService.updateEmpSalary(empsalary)) {
+            return Result.done().message("修改成功");
+        }
+        return Result.error().message("修改失败");
     }
 }
 

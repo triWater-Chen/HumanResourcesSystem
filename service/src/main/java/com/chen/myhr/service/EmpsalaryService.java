@@ -3,10 +3,7 @@ package com.chen.myhr.service;
 import com.chen.myhr.bean.Empsalary;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chen.myhr.bean.vo.request.EmployeePageReq;
-import com.chen.myhr.bean.vo.result.EmployeeWithSalary;
 import com.chen.myhr.bean.vo.result.EmployeeWithSalaryPage;
-
-import java.util.List;
 
 /**
  * @author Chen
@@ -20,4 +17,11 @@ public interface EmpsalaryService extends IService<Empsalary> {
      * @return EmployeeWithSalaryPage
      */
     EmployeeWithSalaryPage getEmployeeList(EmployeePageReq req);
+
+    /**
+     * 修改员工工资账套
+     * @param empsalary 修改信息
+     * @return boolean
+     */
+    boolean updateEmpSalary(Empsalary empsalary);
 }

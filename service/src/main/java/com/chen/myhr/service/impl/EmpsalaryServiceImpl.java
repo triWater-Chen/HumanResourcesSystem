@@ -1,6 +1,7 @@
 package com.chen.myhr.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chen.myhr.bean.Department;
 import com.chen.myhr.bean.Employee;
@@ -90,5 +91,22 @@ public class EmpsalaryServiceImpl extends ServiceImpl<EmpsalaryMapper, Empsalary
         employeeWithSalaryPage.setList(employeeWithSalaries);
 
         return employeeWithSalaryPage;
+    }
+
+    @Override
+    public boolean updateEmpSalary(Empsalary empsalary) {
+
+        Integer count = baseMapper.selectCount(new QueryWrapper<Empsalary>().eq("eid", empsalary.getEid()));
+        int result;
+        if (count > 0) {
+            // 若关联表中员工已存在，则进行更新
+
+            result = baseMapper.update(empsalary, new UpdateWrapper<Empsalary>().eq("eid", empsalary.getEid()));
+        } else {
+            // 否则进行添加
+
+            result = baseMapper.insert(empsalary);
+        }
+        return result > 0;
     }
 }
