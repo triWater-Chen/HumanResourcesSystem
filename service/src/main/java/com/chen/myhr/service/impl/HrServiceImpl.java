@@ -11,6 +11,7 @@ import com.chen.myhr.bean.Role;
 import com.chen.myhr.mapper.HrMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -156,5 +157,18 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
             idList.add(hrRole.getRid());
         }
         return roleService.listByIds(idList);
+    }
+
+    @Override
+    public List<Hr> getHrsExceptCurrentHr() {
+
+        // 获取当前登录用户 id
+        Integer id = ((Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        return baseMapper.selectList(new QueryWrapper<Hr>()
+                .ne("id", id)
+                .eq("enabled", 1)
+                .select("id", "name", "username", "enabled", "userFace")
+        );
     }
 }

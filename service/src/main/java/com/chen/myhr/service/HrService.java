@@ -42,4 +42,10 @@ public interface HrService extends IService<Hr>, UserDetailsService {
      * @return List<Role>
      */
     List<Role> getHrWithRole(Integer id);
+
+    /**
+     * 查询除当前登录用户外所有用户
+     * @return List<Hr>
+     */
+    List<Hr> getHrsExceptCurrentHr();
 }
